@@ -151,7 +151,7 @@ public class InvestorImplExtension implements InvestorExtension {
         for (Object quantity : stockObj.keySet()) {
           Date transactionDate = getDateFromString(quantity.toString());
           if (transactionDate.before(valueDate) || transactionDate.equals(valueDate)) {
-            totalQuantity += Integer.parseInt(stockObj.get(quantity.toString()).toString());
+            totalQuantity += Double.parseDouble(stockObj.get(quantity.toString()).toString());
           }
         }
         double closingValue = 0;
@@ -220,7 +220,7 @@ public class InvestorImplExtension implements InvestorExtension {
   }
 
   private void validateInputs(String portfolio, double commissionFeeValue, String date,
-                              String ticker, Integer quantity) {
+                              String ticker, Double quantity) {
     if (portfolio == null || date == null || ticker == null || quantity == null
             || portfolio.trim().equals("") || date.trim().equals("") || ticker.trim().equals("")
             || commissionFeeValue < 0 || quantity < 0) {
@@ -231,7 +231,7 @@ public class InvestorImplExtension implements InvestorExtension {
 
   @Override
   public void createBuyTransaction(String portfolio, double commissionFeeValue, String date,
-                                   String ticker, Integer quantity) throws RuntimeException {
+                                   String ticker, Double quantity) throws RuntimeException {
     validateInputs(portfolio, commissionFeeValue, date, ticker, quantity);
     futureDateCheck(date);
     try {
@@ -243,7 +243,7 @@ public class InvestorImplExtension implements InvestorExtension {
       }
       JSONObject stock = (JSONObject) portfolioObject.get(ticker);
       if (stock != null) {
-        stock.put(date, quantity + Integer.parseInt(stock.getOrDefault(date, 0).toString()));
+        stock.put(date, quantity + Double.parseDouble(stock.getOrDefault(date, 0).toString()));
       } else {
         JSONObject transactions = new JSONObject();
         transactions.put(date, quantity);
@@ -267,7 +267,7 @@ public class InvestorImplExtension implements InvestorExtension {
 
   @Override
   public void createSellTransaction(String portfolio, double commissionFeeValue, String date,
-                                    String ticker, Integer quantity) throws RuntimeException {
+                                    String ticker, Double quantity) throws RuntimeException {
     validateInputs(portfolio, commissionFeeValue, date, ticker, quantity);
     Date sellDate = futureDateCheck(date);
     try {
@@ -283,13 +283,13 @@ public class InvestorImplExtension implements InvestorExtension {
         int totalBought = 0;
         for (Object keyDate : stock.keySet()) {
           Date transactionDate = getDateFromString(keyDate.toString());
-          totalBought += Integer.parseInt(stock.get(keyDate).toString());
+          totalBought += Double.parseDouble(stock.get(keyDate).toString());
           if (transactionDate.before(sellDate) || transactionDate.equals(sellDate)) {
-            totalBoughtUntilDate += Integer.parseInt(stock.get(keyDate).toString());
+            totalBoughtUntilDate += Double.parseDouble(stock.get(keyDate).toString());
           }
         }
         if (totalBoughtUntilDate >= quantity && totalBought >= quantity) {
-          stock.put(date, Integer.parseInt(stock.getOrDefault(date, 0).toString()) - quantity);
+          stock.put(date, Double.parseDouble(stock.getOrDefault(date, 0).toString()) - quantity);
           JSONObject costBasis = (JSONObject) portfolioObject.get("costBasis");
           costBasis.put(date, commissionFeeValue + Double.parseDouble(
                   costBasis.getOrDefault(date, 0).toString()));
@@ -326,10 +326,10 @@ public class InvestorImplExtension implements InvestorExtension {
   }
 
   @Override
-  public Map<String, Integer> loadFlexiblePortfolio(String name, String date)
+  public Map<String, Double> loadFlexiblePortfolio(String name, String date)
           throws RuntimeException {
     Date givenDate = futureDateCheck(date);
-    Map<String, Integer> hm = new HashMap<>();
+    Map<String, Double> hm = new HashMap<>();
     JSONObject portfolio = getPortfolioObject(name);
     for (Object stockObj : portfolio.keySet()) {
       if (!stockObj.toString().equals("costBasis")) {
@@ -337,8 +337,8 @@ public class InvestorImplExtension implements InvestorExtension {
         for (Object quantity : stock.keySet()) {
           Date quantityDate = getDateFromString(quantity.toString());
           if (!quantityDate.after(givenDate)) {
-            int stockQuantity = Integer.parseInt(stock.get(quantity.toString()).toString());
-            hm.put(stockObj.toString(), hm.getOrDefault(stockObj.toString(), 0) + stockQuantity);
+            Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
+            hm.put(stockObj.toString(), hm.getOrDefault(stockObj.toString(), 0.0) + stockQuantity);
           }
         }
       }

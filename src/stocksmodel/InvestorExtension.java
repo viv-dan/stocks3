@@ -19,6 +19,7 @@ public interface InvestorExtension extends Investor {
 
   /**
    * The method does a transaction of sell in the given portfolio based on the parameters passed.
+   * UPDATE: the quantity data type now has to be double as the user now can sell fractional shares
    *
    * @param portfolio the name of the portfolio in which the sell transaction has to be done
    * @param commissionFeeValue the commission fee which is included for every transaction of sell
@@ -30,10 +31,11 @@ public interface InvestorExtension extends Investor {
    *          stock quantity is less or not even bought till the date in the portfolio
    */
   void createSellTransaction(String portfolio, double commissionFeeValue, String date,
-                             String ticker, Integer quantity) throws RuntimeException;
+                             String ticker, Double quantity) throws RuntimeException;
 
   /**
    * The method does a transaction of buy in the given portfolio based on the parameters passed.
+   * UPDATE: the quantity data type now has to be double to facilitate the dollar-cost averaging
    *
    * @param portfolio the name of the portfolio in which the buy transaction has to be done
    * @param commissionFeeValue the commission fee which is included for every transaction of buy
@@ -44,7 +46,7 @@ public interface InvestorExtension extends Investor {
    *          closed on the particular date that is entered.
    */
   void createBuyTransaction(String portfolio, double commissionFeeValue, String date,
-                            String ticker, Integer quantity) throws IllegalArgumentException;
+                            String ticker, Double quantity) throws IllegalArgumentException;
 
   /**
    * The method returns the cost basis(total investment) of the portfolio until the desired date.
@@ -64,6 +66,6 @@ public interface InvestorExtension extends Investor {
    * @return returns a map of stocks and its respective quantities in the form of a map
    * @throws RuntimeException is thrown when the portfolio doesn't exist
    */
-  Map<String, Integer> loadFlexiblePortfolio(String name, String date) throws RuntimeException;
+  Map<String, Double> loadFlexiblePortfolio(String name, String date) throws RuntimeException;
 
 }
