@@ -271,6 +271,9 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
       JSONParser jsonParser = new JSONParser();
       data = (JSONObject) jsonParser.parse(reader);
       JSONArray portfolio = (JSONArray) data.get(portfolioName);
+      if(portfolio==null){
+        return;
+      }
       for (int i = 0; i < portfolio.size(); i++) {
         JSONObject strategy = (JSONObject) portfolio.get(i);
         String startDate = this.implementStrategy(portfolioName,
