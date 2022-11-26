@@ -46,7 +46,7 @@ public interface Menu {
    *
    * @param stocks the map where it the stock tickers and its quantities
    */
-  void showStocks(Map<String, Integer> stocks);
+  void showStocks(Map<String, Double> stocks);
 
 
   /**

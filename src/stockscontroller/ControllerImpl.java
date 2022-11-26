@@ -347,11 +347,11 @@ public class ControllerImpl implements Controller {
         String date;
         date = sc.nextLine();
         if (j == 1) {
-          i1.createBuyTransaction(name, commission, date, ticker, qty);
+          i1.createBuyTransaction(name, commission, date, ticker, (double) qty);
           m1.successMessage();
           return;
         }
-        i1.createSellTransaction(name, commission, date, ticker, qty);
+        i1.createSellTransaction(name, commission, date, ticker, (double) qty);
         m1.successMessage();
       } else {
         m1.showInputError();
@@ -404,7 +404,12 @@ public class ControllerImpl implements Controller {
       } else if (j == 2) {
         m1.showSinglePortfolioMenu();
         s = sc.nextLine();
-        m1.showStocks(i1.loadPortfolio(s));
+        Map<String, Integer> first = i1.loadPortfolio(s);
+        Map<String, Double> hm = new HashMap<>();
+        for(String ss : first.keySet()){
+          hm.put(ss,Double.parseDouble(first.get(ss).toString()));
+        }
+        m1.showStocks(hm);
       } else {
         m1.showInputError();
         m1.goBackMessage();

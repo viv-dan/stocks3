@@ -55,7 +55,7 @@ public class MenuImpl implements Menu {
   }
 
   @Override
-  public void showStocks(Map<String, Integer> stocks) {
+  public void showStocks(Map<String, Double> stocks) {
     if (stocks.isEmpty()) {
       this.out.println("Portfolio is Empty");
     } else {

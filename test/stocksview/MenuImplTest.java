@@ -108,9 +108,9 @@ public class MenuImplTest {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     m1.setStream(out);
-    Map<String, Integer> s = new HashMap<>();
-    s.put("AAPL", 10);
-    s.put("AMZN", 20);
+    Map<String, Double> s = new HashMap<>();
+    s.put("AAPL", 10.0);
+    s.put("AMZN", 20.0);
     m1.showStocks(s);
     for (String name : s.keySet()) {
       this.addMessage("Stock Ticker " + name + " Quantity " + s.get(name));
@@ -123,7 +123,7 @@ public class MenuImplTest {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     m1.setStream(out);
-    Map<String, Integer> s = new HashMap<>();
+    Map<String, Double> s = new HashMap<>();
     m1.showStocks(s);
     this.addMessage("Portfolio is Empty");
     assertEquals(b.toString(), bytes.toString());
