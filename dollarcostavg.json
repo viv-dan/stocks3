@@ -1,1 +1,24 @@
-{"vivdan":[{"amount":3890.0,"commissionFee":20.0,"endDate":"2011-01-01","recurrenceDays":30,"weights":{"AAPL":100.0},"startDate":"2010-12-27"},{"amount":3890.0,"commissionFee":20.0,"endDate":"2011-01-01","recurrenceDays":30,"weights":{"AAPL":100.0},"startDate":"2010-12-27"}]}
+{
+  "vivdan": [
+    {
+      "amount": 3890.0,
+      "commissionFee": 20.0,
+      "endDate": "2011-01-01",
+      "recurrenceDays": 30,
+      "weights": {
+        "AAPL": 100.0
+      },
+      "startDate": "2010-12-27"
+    },
+    {
+      "amount": 3890.0,
+      "commissionFee": 20.0,
+      "endDate": "2011-01-01",
+      "recurrenceDays": 30,
+      "weights": {
+        "AAPL": 100.0
+      },
+      "startDate": "2010-12-27"
+    }
+  ]
+}
