@@ -222,6 +222,8 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
             if (e.getMessage().equals("Cannot get stock data for the given date")) {
               c.add(Calendar.DATE, 1);
               formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+            }else{
+              throw new RuntimeException(e.getMessage());
             }
           }
         }
@@ -276,9 +278,13 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
       }
       for (int i = 0; i < portfolio.size(); i++) {
         JSONObject strategy = (JSONObject) portfolio.get(i);
+        String endDate = null;
+        if(strategy.get("endDate")!=null){
+          endDate = strategy.get("endDate").toString();
+        }
         String startDate = this.implementStrategy(portfolioName,
                 strategy.get("startDate").toString(),
-                strategy.get("endDate").toString(),
+                endDate,
                 Integer.parseInt(strategy.get("recurrenceDays").toString()),
                 Double.parseDouble(strategy.get("commissionFee").toString()),
                 Double.parseDouble(strategy.get("amount").toString()),
