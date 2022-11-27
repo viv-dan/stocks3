@@ -2,6 +2,7 @@ package stocksview;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,30 +19,35 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JButton getCostBasis;
   private JButton performTransaction;
   private JButton createFlexible;
-  private JButton createInflexible;
+  private JButton getFlexiblePortfolio;
+  private JButton getInflexiblePortfolio;
+  private JButton investAmount;
+  private JButton highLevelStrategy;
   private JButton exitButton;
   private JButton buy;
   private JButton sell;
   private JButton goBack;
   private JButton showValue;
+  private JButton investStrategy;
   private JButton plotGraph;
   private JPanel mainPanel;
   private JScrollPane mainScrollPane;
-  private JRadioButton[] radioButtons = new JRadioButton[2];
   public GraphicalViewImpl(){
     super("Welcome");
     goBack = new JButton("Go Back to Main Menu");
     goBack.setActionCommand("GoBack");
-    radioButtons[0]=new JRadioButton("Inflexible Portfolio");
-    radioButtons[1]=new JRadioButton("Flexible Portfolio");
+    getInflexiblePortfolio=new JButton("Inflexible Portfolio");
+    getFlexiblePortfolio= new JButton("Flexible Portfolio");
     buy=new JButton("Buy a stock in a Portfolio");
     buy.setActionCommand("buy");
     sell=new JButton("Sell a stock in a Portfolio");
     sell.setActionCommand("sell");
     createFlexible=new JButton("Create Flexible Portfolio");
     createFlexible.setActionCommand("createFlexible");
-    createInflexible=new JButton("Create Inflexible Portfolio");
-    createInflexible.setActionCommand("createInflexible");
+    investAmount=new JButton("Invest Fixed Amount in Existing Portfolio");
+    investAmount.setActionCommand("fixedAmount");
+    highLevelStrategy=new JButton("Dollar Cost Averaging Strategy");
+    highLevelStrategy.setActionCommand("highLevelInvest");
     setSize(400,400);
     setLocation(300,300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,8 +62,6 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   public void setMenu(){
     mainPanel.removeAll();
     mainPanel.repaint();
-    radioButtons[0].setSelected(false);
-    radioButtons[1].setSelected(false);
     JPanel menu = new JPanel();
     menu.setBorder(BorderFactory.createTitledBorder("Menu"));
     menu.setLayout(new BoxLayout(menu, BoxLayout.PAGE_AXIS));
@@ -66,7 +70,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     showPortfolio.setActionCommand("showPortfolio");
     showParticularPortfolio=new JButton("Show Particular Portfolios");
     showParticularPortfolio.setActionCommand("showParticularPortfolio");
-    createPortfolio=new JButton("Create Portfolio");
+    createPortfolio=new JButton("Create Flexible Portfolio");
     createPortfolio.setActionCommand("createPortfolio");
     showValue = new JButton("Portfolio Value");
     showValue.setActionCommand("valueOfP");
@@ -74,6 +78,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     getCostBasis.setActionCommand("costBasis");
     performTransaction=new JButton("Perform a Buy or Sell Transaction");
     performTransaction.setActionCommand("performBuySell");
+    investStrategy=new JButton("Investment Strategy");
+    investStrategy.setActionCommand("strategy");
     plotGraph=new JButton("Graph");
     plotGraph.setActionCommand("graph");
     exitButton=new JButton("Exit");
@@ -86,6 +92,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     menu.add(showValue);
     menu.add(getCostBasis);
     menu.add(performTransaction);
+    menu.add(investStrategy);
     menu.add(plotGraph);
     menu.add(exitButton);
     setVisible(true);
@@ -99,16 +106,18 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     showParticularPortfolio.addActionListener(e -> this.chooseWhichPortfolio());
     goBack.addActionListener(e -> feature.goToMainMenu());
     createPortfolio.addActionListener(e -> this.chooseWhichPortfolioOption());
-    showValue.addActionListener(e -> feature.totalPortfolioValue());
-    radioButtons[0].addActionListener(e -> feature.showParticularPortfolio());
-    radioButtons[1].addActionListener(e -> feature.showFlexiblePortfolio());
-    getCostBasis.addActionListener(e -> feature.getCostBasis());
+    showValue.addActionListener(e -> feature.totalPortfolioValue(this.showPortfolioDate()));
+    getInflexiblePortfolio.addActionListener(e -> feature.showParticularPortfolio());
+    getFlexiblePortfolio.addActionListener(e -> feature.showFlexiblePortfolio(this.showPortfolioDate()));
+    getCostBasis.addActionListener(e -> feature.getCostBasis(this.showPortfolioDate()));
     performTransaction.addActionListener(e -> this.chooseBuyOrSell());
-    buy.addActionListener(e -> feature.performBuy());
-    sell.addActionListener(e -> feature.performSell());
-    createFlexible.addActionListener(e -> feature.createFlexiblePortfolio() );
-    createInflexible.addActionListener(e -> feature.createInflexiblePortfolio());
-    plotGraph.addActionListener(e -> feature.plotGraph());
+    buy.addActionListener(e -> feature.performBuy(this.showBuySellForm()));
+    sell.addActionListener(e -> feature.performSell(this.showBuySellForm()));
+    createFlexible.addActionListener(e -> feature.createFlexiblePortfolio());
+    investStrategy.addActionListener(e -> this.chooseWhichStrategy());
+    plotGraph.addActionListener(e -> feature.plotGraph(this.enterGraphDetails()));
+    investAmount.addActionListener(e -> this.investFixedForm());
+//    investAmount.addActionListener(feature.investFixedAmount(this.investFixedForm()));
     exitButton.addActionListener(e -> {System.exit(0);});
   }
 
@@ -132,6 +141,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     other.add(l);
     mainPanel.add(other);
     mainPanel.add(goBack);
+    validate();
   }
 
   @Override
@@ -144,7 +154,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     return name;
   }
   @Override
-  public String showDate() {
+  public ArrayList<String> showPortfolioDate() {
     JPanel controls = new JPanel(new FlowLayout());
     JTextField portfolio = new JTextField(5);
     JLabel portfolioLabel = new JLabel("Enter portfolio");
@@ -155,7 +165,10 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(dateLabel, BorderLayout.WEST);
     controls.add(date, BorderLayout.CENTER);
     JOptionPane.showMessageDialog(this, controls, "form", JOptionPane.QUESTION_MESSAGE);
-    return portfolio.getText()+"!"+date.getText();
+    ArrayList<String> ret = new ArrayList<>();
+    ret.add(portfolio.getText());
+    ret.add(date.getText());
+    return ret;
   }
 
   @Override
@@ -173,6 +186,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     JTable j=new JTable(data,columns);
     mainPanel.add(j);
     mainPanel.add(goBack);
+    validate();
   }
 
   @Override
@@ -197,16 +211,10 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   public void chooseWhichPortfolio() {
     mainPanel.removeAll();
     mainPanel.repaint();
-    JPanel radioPanel = new JPanel();
-    radioPanel.setBorder(BorderFactory.createTitledBorder("Radio buttons"));
-    radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.PAGE_AXIS));
-    ButtonGroup rGroup1 = new ButtonGroup();
-    rGroup1.add(radioButtons[0]);
-    rGroup1.add(radioButtons[1]);
-    radioPanel.add(radioButtons[0]);
-    radioPanel.add(radioButtons[1]);
-    mainPanel.add(radioPanel);
+    mainPanel.add(getFlexiblePortfolio);
+    mainPanel.add(getInflexiblePortfolio);
     mainPanel.add(goBack);
+    validate();
   }
 
   @Override
@@ -216,10 +224,11 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     mainPanel.add(buy);
     mainPanel.add(sell);
     mainPanel.add(goBack);
+    validate();
   }
 
   @Override
-  public String showBuySellForm() {
+  public ArrayList<String> showBuySellForm() {
     JPanel controls = new JPanel(new FlowLayout());
     JTextField portfolio = new JTextField(5);
     JLabel portfolioLabel = new JLabel("Enter portfolio");
@@ -243,8 +252,13 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(commissionFee, BorderLayout.CENTER);
     JOptionPane.showMessageDialog(this, controls, "form",
             JOptionPane.QUESTION_MESSAGE);
-    return portfolio.getText()+"!"+date.getText()+"!"+
-            ticker.getText()+"!"+quantity.getText()+"!"+commissionFee.getText();
+    ArrayList<String> values = new ArrayList<>();
+    values.add(portfolio.getText());
+    values.add(date.getText());
+    values.add(ticker.getText());
+    values.add(quantity.getText());
+    values.add(commissionFee.getText());
+    return values;
   }
 
   @Override
@@ -252,8 +266,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     mainPanel.removeAll();
     mainPanel.repaint();
     mainPanel.add(createFlexible);
-    mainPanel.add(createInflexible);
     mainPanel.add(goBack);
+    validate();
   }
 
   @Override
@@ -262,7 +276,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   }
 
   @Override
-  public String enterGraphDetails() {
+  public ArrayList<String> enterGraphDetails() {
     JPanel controls = new JPanel(new FlowLayout());
     JTextField portfolio = new JTextField(5);
     JLabel portfolioLabel = new JLabel("Enter portfolio");
@@ -278,7 +292,32 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(endDate, BorderLayout.CENTER);
     JOptionPane.showMessageDialog(this, controls, "Graph",
             JOptionPane.QUESTION_MESSAGE);
-    return portfolio.getText()+"!"+startDate.getText()+"!"+
-            endDate.getText();
+    ArrayList<String>values=new ArrayList<>();
+    values.add(portfolio.getText());
+    values.add(startDate.getText());
+    values.add(endDate.getText());
+    return values;
   }
+
+  @Override
+  public void plot(Map<String, Double> trial) {
+
+  }
+
+  @Override
+  public void chooseWhichStrategy() {
+    mainPanel.removeAll();
+    mainPanel.repaint();
+    mainPanel.add(investAmount);
+    mainPanel.add(highLevelStrategy);
+    mainPanel.add(goBack);
+    validate();
+  }
+
+  @Override
+  public ArrayList<String> investFixedForm() {
+    return null;
+  }
+
+
 }

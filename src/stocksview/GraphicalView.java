@@ -1,5 +1,6 @@
 package stocksview;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public interface GraphicalView {
   void addFeatures(Features feature);
   void showAllNames(List<String> names);
   String showParticularPortfolio();
-  String showDate();
+  ArrayList<String> showPortfolioDate();
   void showStocks(Map<String,Double> portfolio);
   void resetFocus();
   void showValue(double value,String name);
@@ -21,11 +22,18 @@ public interface GraphicalView {
 
   void chooseBuyOrSell();
 
-  String showBuySellForm();
+  ArrayList<String> showBuySellForm();
 
   void chooseWhichPortfolioOption();
 
   void successMessage();
 
-  String enterGraphDetails();
+  ArrayList<String> enterGraphDetails();
+
+
+  void plot(Map<String, Double> trial);
+
+  void chooseWhichStrategy();
+
+  ArrayList<String> investFixedForm();
 }
