@@ -167,6 +167,23 @@ public class ControllerGUI implements Features{
     plotHelper(timeCalculator(days, sd1, ed1), name);
   }
 
+  @Override
+  public void investFixedAmount(Map<String, Double> formData, String name, String date,Double commissionFee,Double amount) {
+    if(name==null || date==null || formData==null || commissionFee==null){
+      g1.showInputError("Invalid input");
+    }
+    else{
+      try{
+        i1.investAmount(name,formData,amount,date,commissionFee);
+        g1.successMessage();
+      }catch (Exception e){
+        g1.showInputError(e.getMessage());
+      }
+    }
+
+  }
+
+
   private ArrayList<String> timeCalculator(int days, Date sd1, Date ed1) {
     int time = days;
     boolean years = false;
@@ -294,11 +311,6 @@ public class ControllerGUI implements Features{
     g1.resetFocus();
   }
 
-  @Override
-  public void goToMainMenu() {
-    g1.setMenu();
-    g1.addFeatures(this);
-  }
 
   @Override
   public void totalPortfolioValue(ArrayList<String> portfolio) {

@@ -35,5 +35,5 @@ public interface GraphicalView {
 
   void chooseWhichStrategy();
 
-  ArrayList<String> investFixedForm();
+  void investFixedForm();
 }
