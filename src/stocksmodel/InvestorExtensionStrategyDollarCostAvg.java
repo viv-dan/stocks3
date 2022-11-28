@@ -96,8 +96,14 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
 
   @Override
   public void investAmount(String portfolio, Map<String, Double> weights, Double amount,
-                           String date, Double commissionFee) {
-
+                           String date, Double commissionFee) throws RuntimeException {
+    if(weights==null || amount ==null || portfolio==null || date ==null || commissionFee==null ){
+      throw new RuntimeException("invalid input");
+    }
+    this.weightChecker(weights);
+    if(amount == null || amount <= 0 ){
+      throw new RuntimeException("invalid amount");
+    }
     int noOfStocks = weights.size();
     amount = amount - commissionFee;
     commissionFee = commissionFee / noOfStocks;
@@ -109,10 +115,36 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
     }
   }
 
+  private void weightChecker(Map<String, Double> weights){
+    double totalWeight = 0.0;
+    for(String ticker : weights.keySet()){
+      totalWeight+=weights.get(ticker);
+    }
+    if(totalWeight<100 || totalWeight>100){
+      throw new RuntimeException("invalid weights");
+    }
+  }
+
   @Override
   public void highLevelInvestStrategy(String portfolio, String startDate, String endDate,
                                       Integer recurrenceDays, Double commissionFee,
-                                      Double amount, Map<String, Double> weights) {
+                                      Double amount, Map<String, Double> weights)
+                                      throws RuntimeException {
+    if(portfolio ==null || startDate ==null || recurrenceDays==null ||
+            commissionFee==null || amount==null || weights==null){
+      throw new RuntimeException("invalid inputs");
+    }
+    this.weightChecker(weights);
+    getDateFromString(startDate);
+    if(endDate!=null) {
+      getDateFromString(endDate);
+    }
+    if(!(recurrenceDays>0) || commissionFee<0 || amount <= 0){
+      throw new RuntimeException("invalid input");
+    }
+    if(!delegate.loadAllPortfolioNames().contains(portfolio+ " - flexible")){
+      throw new RuntimeException("Portfolio doesn't exist");
+    }
     this.persistStrategy(portfolio, startDate, endDate, recurrenceDays, commissionFee, amount,
             weights);
   }
