@@ -202,9 +202,9 @@ public class InvestorImplExtensionTest {
 
   @Test
   public void testCreateBuyTransaction() {
-    il.createFlexiblePortfolio("junit111");
-    il.createBuyTransaction("junit111", 20, "2022-11-16", "GOOG", 20.0);
-    Map<String, Double> hm = il.loadFlexiblePortfolio("junit111", "2022-11-17");
+    il.createFlexiblePortfolio("junit1111");
+    il.createBuyTransaction("junit1111", 20, "2022-11-16", "GOOG", 20.0);
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit1111", "2022-11-17");
     assertEquals(1, hm.size());
     assertTrue(hm.containsKey("GOOG"));
     assertEquals(20, hm.get("GOOG"), 0);
@@ -286,7 +286,7 @@ public class InvestorImplExtensionTest {
         JSONObject stock = (JSONObject) portfolio.get(stockObj.toString());
         for (Object quantity : stock.keySet()) {
           Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
-          assertEquals(20.0, stockQuantity,0);
+          assertEquals(20, stockQuantity,0);
           assertEquals("GOOG", stockObj.toString());
         }
       }
@@ -367,7 +367,7 @@ public class InvestorImplExtensionTest {
   public void testCostBasis() {
     il.createFlexiblePortfolio("junit10");
     il.createBuyTransaction("junit10", 20, "2022-11-14", "GOOG", 20.0);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit10", "2022-11-14"), 0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit10", "2022-11-14"), 0);
   }
 
   @Test(expected = RuntimeException.class)
@@ -380,20 +380,20 @@ public class InvestorImplExtensionTest {
   public void testCostBasisAfterSell() {
     il.createFlexiblePortfolio("junit1011");
     il.createBuyTransaction("junit1011", 20, "2022-11-14", "GOOG", 20.0);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit1011", "2022-11-14"), 0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit1011", "2022-11-14"), 0);
     il.createSellTransaction("junit1011", 30, "2022-11-14", "GOOG", 20.0);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit1011", "2022-11-14"), 0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit1011", "2022-11-14"), 0);
   }
 
   @Test
   public void testCostBasisNoBasis() {
     il.createFlexiblePortfolio("junit11");
     il.createBuyTransaction("junit11", 20, "2022-11-14", "GOOG", 20.0);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit11", "2022-11-14"), 0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit11", "2022-11-14"), 0);
     il.createSellTransaction("junit11", 30, "2022-11-14", "GOOG", 20.0);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit11", "2022-11-14"), 0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit11", "2022-11-14"), 0);
     assertEquals(0, il.getCostBasis("junit11", "2022-11-13"), 0);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit11", "2022-11-16"), 0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit11", "2022-11-16"), 0);
   }
 
   @Test

@@ -145,7 +145,7 @@ public class InvestorImplExtension implements InvestorExtension {
     JSONObject portfolioObject = getPortfolioObject(name);
     double totalValue = 0.0;
     for (Object stock : portfolioObject.keySet()) {
-      int totalQuantity = 0;
+      double totalQuantity = 0;
       if (!stock.toString().equals("costBasis")) {
         JSONObject stockObj = (JSONObject) portfolioObject.get(stock.toString());
         for (Object quantity : stockObj.keySet()) {
@@ -235,7 +235,7 @@ public class InvestorImplExtension implements InvestorExtension {
     validateInputs(portfolio, commissionFeeValue, date, ticker, quantity);
     futureDateCheck(date);
     try {
-      Double cost = StockImpl.getBuilder().ticker(ticker).build().getStockValue(date);
+      Double cost = StockImpl.getBuilder().ticker(ticker).build().getStockValue(date)*quantity;
       JSONObject data = readJSON();
       JSONObject portfolioObject = (JSONObject) data.get(portfolio);
       if (portfolioObject == null) {
@@ -279,8 +279,8 @@ public class InvestorImplExtension implements InvestorExtension {
       }
       JSONObject stock = (JSONObject) portfolioObject.get(ticker);
       if (stock != null) {
-        int totalBoughtUntilDate = 0;
-        int totalBought = 0;
+        Double totalBoughtUntilDate = 0.0;
+        Double totalBought = 0.0;
         for (Object keyDate : stock.keySet()) {
           Date transactionDate = getDateFromString(keyDate.toString());
           totalBought += Double.parseDouble(stock.get(keyDate).toString());
