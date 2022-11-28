@@ -174,7 +174,7 @@ public class InvestorImplExtensionTest {
   @Test
   public void testCreateFlexiblePortfolio() {
     il.createFlexiblePortfolio("junit");
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("junit", "2022-11-01");
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit", "2022-11-01");
     assertEquals(0, hm.size());
   }
 
@@ -202,9 +202,9 @@ public class InvestorImplExtensionTest {
 
   @Test
   public void testCreateBuyTransaction() {
-    il.createFlexiblePortfolio("junit");
-    il.createBuyTransaction("junit", 20, "2022-11-16", "GOOG", 20);
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("junit", "2022-11-17");
+    il.createFlexiblePortfolio("junit1111");
+    il.createBuyTransaction("junit1111", 20, "2022-11-16", "GOOG", 20.0);
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit1111", "2022-11-17");
     assertEquals(1, hm.size());
     assertTrue(hm.containsKey("GOOG"));
     assertEquals(20, hm.get("GOOG"), 0);
@@ -213,10 +213,10 @@ public class InvestorImplExtensionTest {
   @Test
   public void testCreateMultipleBuyTransaction() {
     il.createFlexiblePortfolio("junit3");
-    il.createBuyTransaction("junit3", 20, "2022-11-16", "GOOG", 20);
-    il.createBuyTransaction("junit3", 20, "2022-11-15", "GOOG", 20);
-    il.createBuyTransaction("junit3", 20, "2022-11-14", "GOOG", 20);
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("junit3", "2022-11-17");
+    il.createBuyTransaction("junit3", 20, "2022-11-16", "GOOG", 20.0);
+    il.createBuyTransaction("junit3", 20, "2022-11-15", "GOOG", 20.0);
+    il.createBuyTransaction("junit3", 20, "2022-11-14", "GOOG", 20.0);
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit3", "2022-11-17");
     assertEquals(1, hm.size());
     assertTrue(hm.containsKey("GOOG"));
     assertEquals(60, hm.get("GOOG"), 0);
@@ -224,52 +224,52 @@ public class InvestorImplExtensionTest {
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionPortfolioNotExists() {
-    il.createBuyTransaction("junit1", 20, "2022-11-16", "GOOG", 20);
+    il.createBuyTransaction("junit1", 20, "2022-11-16", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionDateStockIsNotOpen() {
-    il.createBuyTransaction("vivdan", 20, "2022-11-13", "GOOG", 20);
+    il.createBuyTransaction("vivdan", 20, "2022-11-13", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionDateFutureDate() {
-    il.createBuyTransaction("vivdan", 20, "2022-12-13", "GOOG", 20);
+    il.createBuyTransaction("vivdan", 20, "2022-12-13", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionInvalidStock() {
-    il.createBuyTransaction("vivdan", 20, "2022-11-01", "GOOGjksd", 20);
+    il.createBuyTransaction("vivdan", 20, "2022-11-01", "GOOGjksd", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionNegativeComissionFee() {
-    il.createBuyTransaction("vivdan", -20, "2022-11-01", "GOOG", 20);
+    il.createBuyTransaction("vivdan", -20, "2022-11-01", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateBuyTransactionNegativeQuanity() {
-    il.createBuyTransaction("vivdan", 20, "2022-11-01", "GOOG", -20);
+    il.createBuyTransaction("vivdan", 20, "2022-11-01", "GOOG", -20.0);
   }
 
   @Test
   public void testCreateSellTransaction() {
     il.createFlexiblePortfolio("junit4");
-    il.createBuyTransaction("junit4", 20, "2022-11-16", "GOOG", 20);
-    il.createBuyTransaction("junit4", 20, "2022-11-15", "GOOG", 20);
-    il.createBuyTransaction("junit4", 20, "2022-11-14", "GOOG", 20);
-    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20);
-    Map<String, Integer> hm1 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
+    il.createBuyTransaction("junit4", 20, "2022-11-16", "GOOG", 20.0);
+    il.createBuyTransaction("junit4", 20, "2022-11-15", "GOOG", 20.0);
+    il.createBuyTransaction("junit4", 20, "2022-11-14", "GOOG", 20.0);
+    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20.0);
+    Map<String, Double> hm1 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
     assertEquals(1, hm1.size());
     assertTrue(hm1.containsKey("GOOG"));
     assertEquals(40, hm1.get("GOOG"), 0);
-    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20);
-    Map<String, Integer> hm2 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
+    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20.0);
+    Map<String, Double> hm2 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
     assertEquals(1, hm2.size());
     assertTrue(hm2.containsKey("GOOG"));
     assertEquals(20, hm2.get("GOOG"), 0);
-    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20);
-    Map<String, Integer> hm3 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
+    il.createSellTransaction("junit4", 20, "2022-11-16", "GOOG", 20.0);
+    Map<String, Double> hm3 = il.loadFlexiblePortfolio("junit4", "2022-11-17");
     assertEquals(1, hm3.size());
     assertTrue(hm3.containsKey("GOOG"));
     assertEquals(0, hm3.get("GOOG"), 0);
@@ -278,15 +278,15 @@ public class InvestorImplExtensionTest {
   @Test
   public void testCreateBuyTransactionSaveFormat() {
     il.createFlexiblePortfolio("junit15");
-    il.createBuyTransaction("junit15", 20, "2022-11-16", "GOOG", 20);
+    il.createBuyTransaction("junit15", 20, "2022-11-16", "GOOG", 20.0);
     JSONObject portfolio = getPortfolioObject("junit15");
     assertEquals(2, portfolio.keySet().size());
     for (Object stockObj : portfolio.keySet()) {
       if (!stockObj.toString().equals("costBasis")) {
         JSONObject stock = (JSONObject) portfolio.get(stockObj.toString());
         for (Object quantity : stock.keySet()) {
-          int stockQuantity = Integer.parseInt(stock.get(quantity.toString()).toString());
-          assertEquals(20, stockQuantity);
+          Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
+          assertEquals(20, stockQuantity,0);
           assertEquals("GOOG", stockObj.toString());
         }
       }
@@ -296,16 +296,16 @@ public class InvestorImplExtensionTest {
   @Test
   public void testCreateSellTransactionSaveFormat() {
     il.createFlexiblePortfolio("junit14");
-    il.createBuyTransaction("junit14", 20, "2022-11-16", "GOOG", 20);
-    il.createSellTransaction("junit14", 20, "2022-11-16", "GOOG", 20);
+    il.createBuyTransaction("junit14", 20, "2022-11-16", "GOOG", 20.0);
+    il.createSellTransaction("junit14", 20, "2022-11-16", "GOOG", 20.0);
     JSONObject portfolio = getPortfolioObject("junit14");
     assertEquals(2, portfolio.keySet().size());
     for (Object stockObj : portfolio.keySet()) {
       if (!stockObj.toString().equals("costBasis")) {
         JSONObject stock = (JSONObject) portfolio.get(stockObj.toString());
         for (Object quantity : stock.keySet()) {
-          int stockQuantity = Integer.parseInt(stock.get(quantity.toString()).toString());
-          assertEquals(0, stockQuantity);
+          Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
+          assertEquals(0, stockQuantity,0);
           assertEquals("GOOG", stockObj.toString());
         }
       }
@@ -314,60 +314,60 @@ public class InvestorImplExtensionTest {
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionPortfolioNotExists() {
-    il.createSellTransaction("junit1", 20, "2022-11-16", "GOOG", 20);
+    il.createSellTransaction("junit1", 20, "2022-11-16", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionDateStockIsNotOpen() {
-    il.createSellTransaction("vivdan", 20, "2022-11-13", "GOOG", 20);
+    il.createSellTransaction("vivdan", 20, "2022-11-13", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionDateFutureDate() {
-    il.createSellTransaction("vivdan", 20, "2022-12-13", "GOOG", 20);
+    il.createSellTransaction("vivdan", 20, "2022-12-13", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionInvalidStock() {
-    il.createSellTransaction("vivdan", 20, "2022-11-01", "GOOGjksd", 20);
+    il.createSellTransaction("vivdan", 20, "2022-11-01", "GOOGjksd", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionNegativeComissionFee() {
-    il.createSellTransaction("vivdan", -20, "2022-11-01", "GOOG", 20);
+    il.createSellTransaction("vivdan", -20, "2022-11-01", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionNegativeQuanity() {
-    il.createSellTransaction("vivdan", 20, "2022-11-01", "GOOG", -20);
+    il.createSellTransaction("vivdan", 20, "2022-11-01", "GOOG", -20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionInvalidChecks() {
     il.createFlexiblePortfolio("junit5");
-    il.createBuyTransaction("junit5", 20, "2022-11-16", "GOOG", 20);
-    il.createSellTransaction("junit5", 20, "2022-11-15", "GOOG", 20);
+    il.createBuyTransaction("junit5", 20, "2022-11-16", "GOOG", 20.0);
+    il.createSellTransaction("junit5", 20, "2022-11-15", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionInvalidChecksBeforeBuy() {
     il.createFlexiblePortfolio("junit6");
-    il.createSellTransaction("junit6", 20, "2022-11-15", "GOOG", 20);
+    il.createSellTransaction("junit6", 20, "2022-11-15", "GOOG", 20.0);
   }
 
   @Test(expected = RuntimeException.class)
   public void testCreateSellTransactionInvalidChronology() {
     il.createFlexiblePortfolio("junit7");
-    il.createBuyTransaction("junit7", 20, "2022-11-14", "GOOG", 20);
-    il.createSellTransaction("junit7", 20, "2022-11-16", "GOOG", 20);
-    il.createSellTransaction("junit7", 20, "2022-11-15", "GOOG", 20);
+    il.createBuyTransaction("junit7", 20, "2022-11-14", "GOOG", 20.0);
+    il.createSellTransaction("junit7", 20, "2022-11-16", "GOOG", 20.0);
+    il.createSellTransaction("junit7", 20, "2022-11-15", "GOOG", 20.0);
   }
 
   @Test
   public void testCostBasis() {
     il.createFlexiblePortfolio("junit10");
-    il.createBuyTransaction("junit10", 20, "2022-11-14", "GOOG", 20);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit10", "2022-11-14"), 0);
+    il.createBuyTransaction("junit10", 20, "2022-11-14", "GOOG", 20.0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit10", "2022-11-14"), 0);
   }
 
   @Test(expected = RuntimeException.class)
@@ -378,43 +378,43 @@ public class InvestorImplExtensionTest {
 
   @Test
   public void testCostBasisAfterSell() {
-    il.createFlexiblePortfolio("junit10");
-    il.createBuyTransaction("junit10", 20, "2022-11-14", "GOOG", 20);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit10", "2022-11-14"), 0);
-    il.createSellTransaction("junit10", 30, "2022-11-14", "GOOG", 20);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit10", "2022-11-14"), 0);
+    il.createFlexiblePortfolio("junit1011");
+    il.createBuyTransaction("junit1011", 20, "2022-11-14", "GOOG", 20.0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit1011", "2022-11-14"), 0);
+    il.createSellTransaction("junit1011", 30, "2022-11-14", "GOOG", 20.0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit1011", "2022-11-14"), 0);
   }
 
   @Test
   public void testCostBasisNoBasis() {
     il.createFlexiblePortfolio("junit11");
-    il.createBuyTransaction("junit11", 20, "2022-11-14", "GOOG", 20);
-    assertEquals(96.0300 + 20, il.getCostBasis("junit11", "2022-11-14"), 0);
-    il.createSellTransaction("junit11", 30, "2022-11-14", "GOOG", 20);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit11", "2022-11-14"), 0);
+    il.createBuyTransaction("junit11", 20, "2022-11-14", "GOOG", 20.0);
+    assertEquals(1920.6 + 20, il.getCostBasis("junit11", "2022-11-14"), 0);
+    il.createSellTransaction("junit11", 30, "2022-11-14", "GOOG", 20.0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit11", "2022-11-14"), 0);
     assertEquals(0, il.getCostBasis("junit11", "2022-11-13"), 0);
-    assertEquals(96.0300 + 20 + 30, il.getCostBasis("junit11", "2022-11-16"), 0);
+    assertEquals(1920.6 + 20 + 30, il.getCostBasis("junit11", "2022-11-16"), 0);
   }
 
   @Test
   public void testLoadFlexiblePortfolioAfterBuys() {
     il.createFlexiblePortfolio("junit12");
-    il.createBuyTransaction("junit12", 20, "2022-11-14", "GOOG", 20);
-    il.createBuyTransaction("junit12", 20, "2022-11-15", "AMZN", 20);
-    il.createBuyTransaction("junit12", 20, "2022-11-16", "AAPL", 20);
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("junit12", "2022-11-13");
+    il.createBuyTransaction("junit12", 20, "2022-11-14", "GOOG", 20.0);
+    il.createBuyTransaction("junit12", 20, "2022-11-15", "AMZN", 20.0);
+    il.createBuyTransaction("junit12", 20, "2022-11-16", "AAPL", 20.0);
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit12", "2022-11-13");
     assertEquals(0, hm.size());
-    Map<String, Integer> hm1 = il.loadFlexiblePortfolio("junit12", "2022-11-14");
+    Map<String, Double> hm1 = il.loadFlexiblePortfolio("junit12", "2022-11-14");
     assertEquals(1, hm1.size());
     assertTrue(hm1.containsKey("GOOG"));
     assertEquals(20, hm1.get("GOOG"), 0);
-    Map<String, Integer> hm2 = il.loadFlexiblePortfolio("junit12", "2022-11-15");
+    Map<String, Double> hm2 = il.loadFlexiblePortfolio("junit12", "2022-11-15");
     assertEquals(2, hm2.size());
     assertTrue(hm2.containsKey("GOOG"));
     assertTrue(hm2.containsKey("AMZN"));
     assertEquals(20, hm2.get("GOOG"), 0);
     assertEquals(20, hm2.get("AMZN"), 0);
-    Map<String, Integer> hm3 = il.loadFlexiblePortfolio("junit12", "2022-11-16");
+    Map<String, Double> hm3 = il.loadFlexiblePortfolio("junit12", "2022-11-16");
     assertEquals(3, hm3.size());
     assertTrue(hm3.containsKey("GOOG"));
     assertTrue(hm3.containsKey("AMZN"));
@@ -427,16 +427,16 @@ public class InvestorImplExtensionTest {
   @Test
   public void testLoadFlexiblePortfolioAfterSells() {
     il.createFlexiblePortfolio("junit13");
-    il.createBuyTransaction("junit13", 20, "2022-11-01", "GOOG", 20);
-    il.createBuyTransaction("junit13", 20, "2022-11-02", "AMZN", 30);
-    il.createBuyTransaction("junit13", 20, "2022-11-03", "AAPL", 40);
-    il.createSellTransaction("junit13", 20, "2022-11-01", "GOOG", 20);
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("junit13", "2022-11-02");
+    il.createBuyTransaction("junit13", 20, "2022-11-01", "GOOG", 20.0);
+    il.createBuyTransaction("junit13", 20, "2022-11-02", "AMZN", 30.0);
+    il.createBuyTransaction("junit13", 20, "2022-11-03", "AAPL", 40.0);
+    il.createSellTransaction("junit13", 20, "2022-11-01", "GOOG", 20.0);
+    Map<String, Double> hm = il.loadFlexiblePortfolio("junit13", "2022-11-02");
     assertEquals(0, hm.get("GOOG"), 0);
-    il.createSellTransaction("junit13", 20, "2022-11-04", "AMZN", 30);
-    Map<String, Integer> hm1 = il.loadFlexiblePortfolio("junit13", "2022-11-07");
+    il.createSellTransaction("junit13", 20, "2022-11-04", "AMZN", 30.0);
+    Map<String, Double> hm1 = il.loadFlexiblePortfolio("junit13", "2022-11-07");
     assertEquals(0, hm1.get("AMZN"), 0);
-    Map<String, Integer> hm2 = il.loadFlexiblePortfolio("junit13", "2022-11-03");
+    Map<String, Double> hm2 = il.loadFlexiblePortfolio("junit13", "2022-11-03");
     assertEquals(30, hm2.get("AMZN"), 0);
   }
 
@@ -462,7 +462,7 @@ public class InvestorImplExtensionTest {
 
   @Test
   public void testLoadFlexiblePortfolioPastDate() {
-    Map<String, Integer> hm = il.loadFlexiblePortfolio("vivdan", "1900-11-01");
+    Map<String, Double> hm = il.loadFlexiblePortfolio("vivdan", "1900-11-01");
     assertEquals(0, hm.size());
   }
 

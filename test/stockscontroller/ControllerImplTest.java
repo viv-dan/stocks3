@@ -1267,7 +1267,7 @@ public class ControllerImplTest {
     @Override
     public void createSellTransaction(String portfolio, double commissionFeeValue,
                                       String date, String ticker,
-                                      Integer quantity) throws RuntimeException {
+                                      Double quantity) throws RuntimeException {
       op.println("createSellTransaction with name " + portfolio
               + "commission value " + commissionFeeValue + " Date "
               + date + " ticker " + ticker + " quantity " + quantity);
@@ -1276,7 +1276,7 @@ public class ControllerImplTest {
     @Override
     public void createBuyTransaction(String portfolio, double commissionFeeValue,
                                      String date, String ticker,
-                                     Integer quantity) throws IllegalArgumentException {
+                                     Double quantity) throws IllegalArgumentException {
       op.println("createBuyTransaction with name " + portfolio
               + "commission value " + commissionFeeValue + " Date "
               + date + " ticker " + ticker + " quantity " + quantity);
@@ -1289,7 +1289,7 @@ public class ControllerImplTest {
     }
 
     @Override
-    public Map<String, Integer> loadFlexiblePortfolio(String name, String date)
+    public Map<String, Double> loadFlexiblePortfolio(String name, String date)
             throws RuntimeException {
       op.println("loadFlexiblePortfolio called with name " + name + " date " + date);
       return null;

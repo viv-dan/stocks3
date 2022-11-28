@@ -86,12 +86,12 @@ public class StockAPITest {
     assertEquals(83.49, sapi.getStockClosingByDate("GOOG", "2022-11-03"), 0);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testGetValueOfStockInvalid() {
     assertEquals(90.5, sapi.getStockClosingByDate("GOOGskdljc", "2022-11-01"), 0);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testGetValueOfStockInvalidDate() {
     assertEquals(90.5, sapi.getStockClosingByDate("GOOGskdljc", "2022-11-13"), 0);
   }
@@ -101,7 +101,7 @@ public class StockAPITest {
     assertEquals(90.5, sapi.getStockClosingByDate("GOOGskdljc", "2022-12-13"), 0);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testGetValueOfStockInvalidPastDate() {
     assertEquals(90.5, sapi.getStockClosingByDate("GOOGskdljc", "1900-12-13"), 0);
   }
