@@ -18,9 +18,11 @@ public interface InvestorExtensionInvestStrategy extends InvestorExtension {
    * @param amount the amount to be invested into the portfolio
    * @param date the specific date on which the investment has to be done
    * @param commissionFee the commission fee for the investment
+   * @throws RuntimeException is thrown when the portfolio doesn't exist or any of the parameters
+   *                          are invalid
    */
   void investAmount(String portfolio, Map<String, Double> weights, Double amount, String date,
-                    Double commissionFee);
+                    Double commissionFee) throws RuntimeException;
 
   /**
    * The method helps in investing specific amount into a portfolio that recurs based on the number
@@ -35,9 +37,11 @@ public interface InvestorExtensionInvestStrategy extends InvestorExtension {
    * @param commissionFee the commission fee for each investment
    * @param amount the amount to be invested into the portfolio each time
    * @param weights the map containing stock tickers and their corresponding weights as their values
+   * @throws RuntimeException is thrown when the portfolio doesn't exist or any of the parameters
+   *                          are invalid
    */
   void highLevelInvestStrategy(String portfolio, String startDate, String endDate,
                                Integer recurrenceDays, Double commissionFee, Double amount,
-                               Map<String, Double> weights);
+                               Map<String, Double> weights) throws RuntimeException;
 
 }
