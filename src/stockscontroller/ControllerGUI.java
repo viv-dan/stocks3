@@ -29,7 +29,7 @@ public class ControllerGUI implements Features{
   @Override
   public void showPortfolios() {
     List<String> names = i1.loadAllPortfolioNames();
-    g1.showAllNames(names);
+    g1.showAllPortfolioNames(names);
     g1.resetFocus();
   }
 
@@ -59,7 +59,7 @@ public class ControllerGUI implements Features{
       name=portfolio.get(0);
       date=portfolio.get(1);
       double value = i1.getCostBasis(name,date);
-      g1.showValue(value,name);
+      g1.showCostOfPortfolio(value,date);
     }
     catch (Exception e){
       g1.showInputError(e.getMessage());
@@ -121,7 +121,6 @@ public class ControllerGUI implements Features{
       }catch (Exception e){
         i1.createFlexiblePortfolio(name);
         g1.successMessage();
-        g1.setMenu();
       }
     }catch (Exception e){
       g1.showInputError(e.getMessage());
@@ -364,7 +363,7 @@ public class ControllerGUI implements Features{
       checkNull(portfolio);
       name= portfolio.get(0);
       date= portfolio.get(1);
-      g1.showValue(i1.getPortfolioValuation(name,date),name);
+      g1.showValueOfPortfolio(i1.getPortfolioValuation(name,date),name);
     }
     catch (Exception e){
       g1.showInputError(e.getMessage());

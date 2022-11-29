@@ -5,8 +5,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.xy.XYSeries;
+
 
 import java.awt.*;
 import java.io.File;
@@ -118,10 +117,10 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
     setVisible(true);
-    setMenu();
+    showMenu();
     mainPanel.add(second);
   }
-  public void setMenu(){
+  public void showMenu(){
     mainPanel.repaint();
     second.removeAll();
     menu = new JPanel();
@@ -248,7 +247,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
 
 
   @Override
-  public void showAllNames(List<String> names) {
+  public void showAllPortfolioNames(List<String> names) {
     second.removeAll();
     mainPanel.repaint();
     JPanel other = new JPanel();
@@ -323,13 +322,25 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   }
 
   @Override
-  public void showValue(double value,String name) {
+  public void showValueOfPortfolio(double value,String name) {
     DecimalFormat df = new DecimalFormat();
     JLabel display=new JLabel("The value of the portfolio "+name+" is USD "+df.format(value));
     second.removeAll();
     second.add(display);
     //JOptionPane.showMessageDialog(this,
            // "The value of the portfolio "+name+" is USD "+df.format(value));
+    mainPanel.repaint();
+    validate();
+  }
+
+  @Override
+  public void showCostOfPortfolio(double value, String date) {
+    DecimalFormat df = new DecimalFormat();
+    JLabel display=new JLabel("The cost of the portfolio on "+date+" is USD "+df.format(value));
+    second.removeAll();
+    second.add(display);
+    //JOptionPane.showMessageDialog(this,
+    // "The value of the portfolio "+name+" is USD "+df.format(value));
     mainPanel.repaint();
     validate();
   }
