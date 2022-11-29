@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * The class implements the InvestorExtension interface and its defined methods for facilitating
  * flexible portfolios while retaining the inflexible portfolio implementations.
  */
-public class InvestorImplExtension implements InvestorExtension {
+public class InvestorImplExtension extends abstractInvestorextensions implements InvestorExtension {
 
   private static String FILENAME = System.getProperty("user.dir") + "/stocks2.json";
   private static List<Portfolio> cachePortfolios = new ArrayList<>();
@@ -30,25 +30,6 @@ public class InvestorImplExtension implements InvestorExtension {
    */
   public InvestorImplExtension() {
     this.delegate = new InvestorImpl();
-  }
-
-  private static JSONObject readJSON() {
-    try (FileReader reader = new FileReader(FILENAME)) {
-      JSONParser jsonParser = new JSONParser();
-      return (JSONObject) jsonParser.parse(reader);
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot retrieve stored data " + e.getMessage());
-    } catch (ParseException e) {
-      throw new RuntimeException("parsing");
-    }
-  }
-
-  private static void writeToJSON(JSONObject data) {
-    try (FileWriter file = new FileWriter(FILENAME)) {
-      file.write(data.toJSONString());
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot store data!!");
-    }
   }
 
   private static Date futureDateCheck(String date) {
@@ -65,7 +46,7 @@ public class InvestorImplExtension implements InvestorExtension {
     return inputDate;
   }
 
-  private static JSONObject getPortfolioObject(String name) {
+  private JSONObject getPortfolioObject(String name) {
     JSONObject data = readJSON();
     JSONObject portfolioObject = (JSONObject) data.get(name);
     if (portfolioObject == null) {
@@ -74,14 +55,9 @@ public class InvestorImplExtension implements InvestorExtension {
     return portfolioObject;
   }
 
-  private static Date getDateFromString(String date) {
-    Date intoDate;
-    try {
-      intoDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-    } catch (java.text.ParseException e) {
-      throw new RuntimeException("Invalid date");
-    }
-    return intoDate;
+  @Override
+  protected String getFilename() {
+    return FILENAME;
   }
 
   /**

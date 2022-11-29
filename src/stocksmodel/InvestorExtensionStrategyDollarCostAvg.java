@@ -2,11 +2,6 @@ package stocksmodel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,23 +12,13 @@ import java.util.Map;
  * The class implements the InvestorExtensionInvestStrategy interface and its defined methods for
  * facilitating dollar cost averaging strategy and a lump sum strategy.
  */
-public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtensionInvestStrategy {
+public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorextensions implements InvestorExtensionInvestStrategy {
 
   private static final String FILENAME = System.getProperty("user.dir") + "/dollarcostavg.json";
   private final InvestorExtension delegate;
 
   public InvestorExtensionStrategyDollarCostAvg() {
     delegate = new InvestorImplExtension();
-  }
-
-  private static Date getDateFromString(String date) {
-    Date intoDate;
-    try {
-      intoDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-    } catch (java.text.ParseException e) {
-      throw new RuntimeException("Invalid date " + e.getMessage());
-    }
-    return intoDate;
   }
 
   @Override
@@ -191,9 +176,7 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
                                Integer recurrenceDays, Double commissionFee,
                                Double amount, Map<String, Double> weights) {
     JSONObject data;
-    try (FileReader reader = new FileReader(FILENAME)) {
-      JSONParser jsonParser = new JSONParser();
-      data = (JSONObject) jsonParser.parse(reader);
+      data = readJSON();
       JSONArray portfolioObj = (JSONArray) data.get(portfolio);
       if (portfolioObj == null) {
         portfolioObj = new JSONArray();
@@ -208,23 +191,12 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
       strategy.put("weights", weightsObj);
       portfolioObj.add(strategy);
       data.put(portfolio, portfolioObj);
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot persist strategy " + e.getMessage());
-    } catch (ParseException e) {
-      throw new RuntimeException("parsing");
-    }
-    try (FileWriter file = new FileWriter(FILENAME)) {
-      file.write(data.toJSONString());
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot persist strategy data!!");
-    }
+      writeToJSON(data);
   }
 
   private void loadAndUpdateStrategy(String portfolioName) {
     JSONObject data;
-    try (FileReader reader = new FileReader(FILENAME)) {
-      JSONParser jsonParser = new JSONParser();
-      data = (JSONObject) jsonParser.parse(reader);
+      data = readJSON();
       JSONArray portfolio = (JSONArray) data.get(portfolioName);
       if (portfolio == null) {
         return;
@@ -244,15 +216,11 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
                 (Map<String, Double>) strategy.get("weights"));
         strategy.put("startDate", startDate);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot retrieve stored data " + e.getMessage());
-    } catch (ParseException e) {
-      throw new RuntimeException("parsing");
-    }
-    try (FileWriter file = new FileWriter(FILENAME)) {
-      file.write(data.toJSONString());
-    } catch (IOException e) {
-      throw new RuntimeException("Cannot persist strategy data!!");
-    }
+      writeToJSON(data);
+  }
+
+  @Override
+  protected String getFilename() {
+    return FILENAME;
   }
 }
