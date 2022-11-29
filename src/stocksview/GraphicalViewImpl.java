@@ -1,5 +1,13 @@
 package stocksview;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.xy.XYSeries;
+
 import java.awt.*;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -10,6 +18,7 @@ import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 import stockscontroller.Features;
 
@@ -411,6 +420,17 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
 
   @Override
   public void plot(Map<String, Double> trial) {
+    DefaultCategoryDataset data = new DefaultCategoryDataset();
+    for (String s: trial.keySet()) {
+      data.addValue(trial.get(s),"Dates",s);
+    }
+    JFreeChart line = ChartFactory.createBarChart("Portfolio","Values",
+            "Dates", data,PlotOrientation.VERTICAL, true,true,false);
+    ChartPanel chartPanel = new ChartPanel( line );
+    second.removeAll();
+    second.add(chartPanel);
+    mainPanel.repaint();
+    validate();
 
   }
 
