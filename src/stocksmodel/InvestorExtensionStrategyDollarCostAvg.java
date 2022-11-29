@@ -157,7 +157,7 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
     if (endDate != null) {
       endingDate = getDateFromString(endDate);
     }
-    while (!startingDate.after(endingDate)) {
+    while (!startingDate.after(endingDate) && !startingDate.after(new Date())) {
       Calendar c = Calendar.getInstance();
       c.setTime(startingDate);
       c.add(Calendar.DATE, recurrenceDays);
@@ -166,6 +166,9 @@ public class InvestorExtensionStrategyDollarCostAvg implements InvestorExtension
         startingDate = getDateFromString(formattedDate);
         while (true) {
           try {
+            if(getDateFromString(formattedDate).after(new Date())){
+              break;
+            }
             this.investAmount(portfolio, weights, amount, formattedDate, commissionFee);
             break;
           } catch (RuntimeException e) {
