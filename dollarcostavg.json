@@ -1,2 +1,16 @@
 {
+  "qwerty": [
+    {
+      "amount": 200.0,
+      "commissionFee": 20.2,
+      "endDate": "2022-11-01",
+      "recurrenceDays": 30,
+      "weights": {
+        "GOOG": 30.0,
+        "AAPL": 50.0,
+        "VZ": 20.0
+      },
+      "startDate": "2022-10-29"
+    }
+  ]
 }

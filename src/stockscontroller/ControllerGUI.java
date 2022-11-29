@@ -82,7 +82,7 @@ public class ControllerGUI implements Features{
       name= values.get(0);
       date=values.get(1);
       ticker=values.get(2);
-      quantity= Double.parseDouble(values.get(3));
+      quantity= Integer.parseInt(values.get(3));
       commission= Double.parseDouble(values.get(4));
       i1.createBuyTransaction(name,commission,date,ticker,quantity);
       g1.successMessage();
@@ -101,7 +101,7 @@ public class ControllerGUI implements Features{
       name= values.get(0);
       date=values.get(1);
       ticker=values.get(2);
-      quantity= Double.parseDouble(values.get(3));
+      quantity= Integer.parseInt(values.get(3));
       commission= Double.parseDouble(values.get(4));
       i1.createSellTransaction(name,commission,date,ticker,quantity);
       g1.successMessage();
@@ -181,6 +181,50 @@ public class ControllerGUI implements Features{
       }
     }
 
+  }
+
+  @Override
+  public void dollarAverageInvesting(Map<String, Double> formData,
+                                     String portfolioName, Double amount,
+                                     String startDate, String endDate,
+                                     Double commissionAmount, String recurrence) {
+    if(portfolioName==null || amount ==null ||
+            startDate==null || endDate ==null ||
+          commissionAmount==null || recurrence==null){
+      g1.showInputError("Invalid Input");
+    }
+    else {
+      try {
+        try{
+          i1.loadPortfolio(portfolioName);
+          g1.showInputError("Portfolio with name already exists");
+          return;
+        }catch (Exception e){
+          i1.createFlexiblePortfolio(portfolioName);
+        }
+        i1.highLevelInvestStrategy(portfolioName,startDate,endDate,
+                Integer.parseInt(recurrence),commissionAmount,amount,formData);
+        g1.successMessage();
+      }catch (Exception e){
+        g1.showInputError(e.getMessage());
+      }
+    }
+  }
+
+  @Override
+  public void changeFile(String name) {
+    if(name==null){
+      g1.showInputError("Error in file change");
+      return;
+    }
+    else {
+      try{
+        i1.changeReadFile(name);
+        g1.successMessage();
+      }catch (Exception e){
+        g1.showInputError(e.getMessage());
+      }
+    }
   }
 
 

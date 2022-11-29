@@ -1,6 +1,7 @@
 package stocksview;
 
 import java.awt.*;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import stockscontroller.Features;
 
@@ -32,6 +34,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JButton submitDollar;
   private JButton showValue;
   private JButton changeFile;
+  private JButton changeFlexibleFile;
+  private JButton changeInflexibleFile;
   private JButton investStrategy;
   private JButton plotGraph;
   private JTextField portfolio;
@@ -43,6 +47,9 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JLabel startDateLabel;
   private JTextField endDate ;
   private JLabel endDateLabel ;
+  private JTextField recurrenceDays;
+
+  private JLabel recurrenceDaysLabel ;
   private JTextField commissionAmount;
   private JLabel commissionAmountLabel;
 
@@ -70,6 +77,11 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     submit.setActionCommand("submitInvestForm");
     submitDollar=new JButton("Submit");
     submitDollar.setActionCommand("submitDollarInvestForm");
+    changeFlexibleFile=new JButton("Change Flexible portfolios File(Select a .json file)");
+    changeFlexibleFile.setActionCommand("flexibleChangeFile");
+    changeInflexibleFile=new JButton("Change Inflexible portfolios File(Select a .xml file)");
+    changeInflexibleFile.setActionCommand("inflexibleChangeFile");
+
 
     portfolio = new JTextField(5);
     portfolioLabel = new JLabel("Enter portfolio");
@@ -82,6 +94,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     endDateLabel = new JLabel("Enter End date in YYYY-MM-DD format");
     commissionAmount = new JTextField(5);
     commissionAmountLabel = new JLabel("Enter commission fees");
+    recurrenceDays = new JTextField(5);
+    recurrenceDaysLabel = new JLabel("Enter the number of days for recurrence of the strategy");
 
 
     setSize(1000,800);
@@ -117,6 +131,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     getCostBasis.setActionCommand("costBasis");
     performTransaction=new JButton("Perform a Buy or Sell Transaction");
     performTransaction.setActionCommand("performBuySell");
+    changeFile=new JButton("Change File");
+    changeFile.setActionCommand("changeFile");
     investStrategy=new JButton("Investment Strategy");
     investStrategy.setActionCommand("strategy");
     plotGraph=new JButton("Graph");
@@ -131,6 +147,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     menu.add(showValue);
     menu.add(getCostBasis);
     menu.add(performTransaction);
+    menu.add(changeFile);
     menu.add(investStrategy);
     menu.add(plotGraph);
     menu.add(exitButton);
@@ -153,13 +170,39 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     sell.addActionListener(e -> feature.performSell(this.showBuySellForm()));
     createFlexible.addActionListener(e -> feature.createFlexiblePortfolio());
     investStrategy.addActionListener(e -> this.chooseWhichStrategy());
+    changeFile.addActionListener(e -> this.chooseFileChange());
+    changeInflexibleFile.addActionListener(e -> feature.changeFile(this.openFileChange()));
+    changeInflexibleFile.addActionListener(e -> feature.changeFile(this.openFileChange()));
     plotGraph.addActionListener(e -> feature.plotGraph(this.enterGraphDetails()));
     investAmount.addActionListener(e -> this.investFixedForm());
     submit.addActionListener(e -> feature.investFixedAmount(this.getFormData(),
             this.portfolioName(),this.startDate(),this.getCommissionAmount(),this.getAmount()));
     highLevelStrategy.addActionListener(e -> this.dollarInvestmentForm());
+    submitDollar.addActionListener(e -> feature.dollarAverageInvesting(this.getFormData(),this.portfolioName(),
+            this.getAmount(),this.startDate(),this.endDate.getText(),
+            this.getCommissionAmount(),this.recurrenceDays.getText()));
 //    investAmount.addActionListener(feature.investFixedAmount(this.investFixedForm()));
     exitButton.addActionListener(e -> {System.exit(0);});
+  }
+  private String openFileChange(){
+    final JFileChooser fchooser = new JFileChooser(".");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "XML and JSON Files", "xml", "json");
+    fchooser.setFileFilter(filter);
+    int value = fchooser.showOpenDialog(second);
+    if (value == JFileChooser.APPROVE_OPTION) {
+      File f = fchooser.getSelectedFile();
+      return (f.getName());
+    }
+    return null;
+  }
+
+  private void chooseFileChange(){
+    second.removeAll();
+    second.add(changeFlexibleFile);
+    second.add(changeInflexibleFile);
+    mainPanel.repaint();
+    validate();
   }
   private Double getCommissionAmount(){
     try {
@@ -432,6 +475,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     setUpForm(controls);
     controls.add(endDateLabel);
     controls.add(endDate);
+    controls.add(recurrenceDaysLabel);
+    controls.add(recurrenceDays);
     controls.add(submitDollar);
     controls.setLayout(new BoxLayout(controls,BoxLayout.Y_AXIS));
     second.removeAll();
