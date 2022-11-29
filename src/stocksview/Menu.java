@@ -1,8 +1,7 @@
 package stocksview;
 
 import java.io.PrintStream;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * The interface specifies the features of Menu view for text based program.
