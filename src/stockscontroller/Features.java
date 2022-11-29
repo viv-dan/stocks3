@@ -1,12 +1,13 @@
 package stockscontroller;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface Features {
 
   void showPortfolios();
   void showParticularPortfolio();
-  void goToMainMenu();
+
   void totalPortfolioValue(ArrayList<String> portfolio);
 
 
@@ -24,4 +25,6 @@ public interface Features {
 
 
   void plotGraph(ArrayList<String> values);
+
+  void investFixedAmount(Map<String, Double> formData,String name,String date,Double commissionFee,Double amount);
 }
