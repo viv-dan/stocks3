@@ -3,9 +3,12 @@ package stockscontroller;
 import java.util.ArrayList;
 import java.util.Map;
 
+import stocksview.GraphicalView;
+
 public interface Features {
 
   void showPortfolios();
+  void setView(GraphicalView g);
   void showParticularPortfolio();
   void totalPortfolioValue(ArrayList<String> portfolio);
   void showFlexiblePortfolio(ArrayList<String> portfolio);

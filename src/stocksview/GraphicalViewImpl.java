@@ -3,6 +3,7 @@ package stocksview;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -433,10 +434,11 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   public void plot(Map<String, Double> trial) {
     DefaultCategoryDataset data = new DefaultCategoryDataset();
     for (String s: trial.keySet()) {
-      data.addValue(trial.get(s),"Dates",s);
+      data.addValue(trial.get(s),"Values",s);
     }
-    JFreeChart line = ChartFactory.createBarChart("Portfolio","Values",
-            "Dates", data,PlotOrientation.VERTICAL, true,true,false);
+    JFreeChart line = ChartFactory.createBarChart("Portfolio","Dates",
+            "Values", data,PlotOrientation.HORIZONTAL, true,true,false);
+    line.setBorderPaint(Color.BLUE);
     ChartPanel chartPanel = new ChartPanel( line );
     second.removeAll();
     second.add(chartPanel);
