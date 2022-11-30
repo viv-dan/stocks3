@@ -286,7 +286,7 @@ public class InvestorImplExtensionTest {
         JSONObject stock = (JSONObject) portfolio.get(stockObj.toString());
         for (Object quantity : stock.keySet()) {
           Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
-          assertEquals(20, stockQuantity,0);
+          assertEquals(20, stockQuantity, 0);
           assertEquals("GOOG", stockObj.toString());
         }
       }
@@ -305,7 +305,7 @@ public class InvestorImplExtensionTest {
         JSONObject stock = (JSONObject) portfolio.get(stockObj.toString());
         for (Object quantity : stock.keySet()) {
           Double stockQuantity = Double.parseDouble(stock.get(quantity.toString()).toString());
-          assertEquals(0, stockQuantity,0);
+          assertEquals(0, stockQuantity, 0);
           assertEquals("GOOG", stockObj.toString());
         }
       }
