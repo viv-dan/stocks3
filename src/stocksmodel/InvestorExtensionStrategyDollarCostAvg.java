@@ -89,6 +89,10 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
     if(amount == null || amount <= 0 ){
       throw new RuntimeException("invalid amount");
     }
+    if(getDateFromString(date).after(new Date())){
+      this.highLevelInvestStrategy(portfolio, date, date, 1, commissionFee, amount, weights);
+      return;
+    }
     int noOfStocks = weights.size();
     amount = amount - commissionFee;
     commissionFee = commissionFee / noOfStocks;
@@ -120,9 +124,12 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
       throw new RuntimeException("invalid inputs");
     }
     this.weightChecker(weights);
-    getDateFromString(startDate);
+    Date start = getDateFromString(startDate);
     if(endDate!=null) {
-      getDateFromString(endDate);
+      Date end = getDateFromString(endDate);
+      if(start.after(end)){
+        throw new RuntimeException("start date cannot be after end date");
+      }
     }
     if(!(recurrenceDays>0) || commissionFee<0 || amount <= 0){
       throw new RuntimeException("invalid input");
@@ -130,6 +137,10 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
     if(!delegate.loadAllPortfolioNames().contains(portfolio+ " - flexible")){
       throw new RuntimeException("Portfolio doesn't exist");
     }
+    Calendar c = Calendar.getInstance();
+    c.setTime(getDateFromString(startDate));
+    c.add(Calendar.DATE, recurrenceDays*(-1));
+    startDate = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
     this.persistStrategy(portfolio, startDate, endDate, recurrenceDays, commissionFee, amount,
             weights);
   }
@@ -147,11 +158,11 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
       c.setTime(startingDate);
       c.add(Calendar.DATE, recurrenceDays);
       String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-      if (getDateFromString(formattedDate).before(endingDate)) {
+      if (!getDateFromString(formattedDate).after(endingDate) && !getDateFromString(formattedDate).after(new Date())) {
         startingDate = getDateFromString(formattedDate);
         while (true) {
           try {
-            if(getDateFromString(formattedDate).after(new Date())){
+            if(getDateFromString(formattedDate).after(new Date()) || getDateFromString(formattedDate).after(endingDate)){
               break;
             }
             this.investAmount(portfolio, weights, amount, formattedDate, commissionFee);

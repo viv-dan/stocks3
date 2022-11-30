@@ -211,6 +211,42 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     ist.investAmount("vivdan", null, 2000.0, "2022-11-01", 30.0);
   }
 
+  @Test
+  public void testInvestAmountStartDateFuture(){
+    ist.createFlexiblePortfolio("dollar test1010");
+    Map<String, Double> hm = new HashMap<>();
+    hm.put("IBM",20.0);
+    hm.put("V",60.0);
+    hm.put("A",10.0);
+    hm.put("B",5.0);
+    hm.put("C",5.0);
+    ist.investAmount("dollar test1010", hm, 2000.0, "2022-12-21", 30.0);
+    JSONObject data;
+    try (FileReader reader = new FileReader(System.getProperty("user.dir") + "/dollarcostavg.json")) {
+      JSONParser jsonParser = new JSONParser();
+      data = (JSONObject) jsonParser.parse(reader);
+      JSONArray portfolio = (JSONArray) data.get("dollar test1010");
+      assertEquals(1,portfolio.size());
+      for (int i = 0; i < portfolio.size(); i++) {
+        JSONObject strategy = (JSONObject) portfolio.get(i);
+        assertEquals("2022-12-21",strategy.get("endDate"));
+        assertEquals("2022-12-20", strategy.get("startDate"));
+        assertEquals(2000.0, strategy.get("amount"));
+        assertEquals(30.0, strategy.get("commissionFee"));
+        assertEquals(1, Integer.parseInt(strategy.get("recurrenceDays").toString()),0);
+        Map<String, Double> we = (Map<String, Double>) strategy.get("weights");
+        assertEquals(hm.size(), we.size());
+        for(String s : hm.keySet()){
+          assertEquals(hm.get(s), we.get(s));
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Cannot retrieve stored data " + e.getMessage());
+    } catch (ParseException e) {
+      throw new RuntimeException("parsing");
+    }
+  }
+
   @Test(expected = RuntimeException.class)
   public void testInvestAmountNull3(){
     Map<String, Double> hm = new HashMap<>();
@@ -442,6 +478,17 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     ist.highLevelInvestStrategy("vivdan", "2022-10-25", "2022-11-28",5, 20.0, -2000.0, hm);
   }
 
+  @Test(expected = RuntimeException.class)
+  public void testHighLevelInvestAmountStartDateAfterEndDate(){
+    Map<String, Double> hm = new HashMap<>();
+    hm.put("IBM",20.0);
+    hm.put("V",60.0);
+    hm.put("A",10.0);
+    hm.put("B",5.0);
+    hm.put("C",5.0);
+    ist.highLevelInvestStrategy("vivdan", "2022-12-25", "2022-11-28",5, 20.0, 2000.0, hm);
+  }
+
   @Test
   public void testHighLevelInvestDataFormatCheckSave(){
     ist.createFlexiblePortfolio("dollar test");
@@ -461,7 +508,7 @@ public class InvestorImplExtensionStrategyDollarCostTest {
       for (int i = 0; i < portfolio.size(); i++) {
         JSONObject strategy = (JSONObject) portfolio.get(i);
         assertEquals("2022-11-28",strategy.get("endDate"));
-        assertEquals("2022-10-25", strategy.get("startDate"));
+        assertEquals("2022-10-20", strategy.get("startDate"));
         assertEquals(2000.0, strategy.get("amount"));
         assertEquals(20.0, strategy.get("commissionFee"));
         assertEquals(5, Integer.parseInt(strategy.get("recurrenceDays").toString()),0);
@@ -497,7 +544,7 @@ public class InvestorImplExtensionStrategyDollarCostTest {
       for (int i = 0; i < portfolio.size(); i++) {
         JSONObject strategy = (JSONObject) portfolio.get(i);
         assertNull(strategy.get("endDate"));
-        assertEquals("2022-10-25", strategy.get("startDate"));
+        assertEquals("2022-10-20", strategy.get("startDate"));
         assertEquals(2000.0, strategy.get("amount"));
         assertEquals(20.0, strategy.get("commissionFee"));
         assertEquals(5, Integer.parseInt(strategy.get("recurrenceDays").toString()));
@@ -524,8 +571,8 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     hm.put("B",5.0);
     hm.put("C",5.0);
     ist.highLevelInvestStrategy("dollar test2", "2012-01-01", "2012-01-31",7, 20.0, 2000.0, hm);
-    assertEquals(0, ist.getPortfolioValuation("dollar test2", "2012-01-08"),0);
-    assertEquals(0, ist.getCostBasis("dollar test2", "2012-01-08"),0);
+    assertEquals(0, ist.getPortfolioValuation("dollar test2", "2012-01-01"),0);
+    assertEquals(0, ist.getCostBasis("dollar test2", "2012-01-01"),0);
   }
 
   @Test
@@ -545,11 +592,11 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     hm1.put("A",10.0);
     hm1.put("B",5.0);
     hm1.put("C",5.0);
-    ist.investAmount("dollar test413", hm, 2000.0, "2012-01-09", 20.0);
-    assertEquals(ist.getPortfolioValuation("dollar test413", "2012-01-09"), ist.getPortfolioValuation("dollar test313", "2012-01-09"));
+    ist.investAmount("dollar test413", hm, 2000.0, "2012-01-03", 20.0);
+    assertEquals(ist.getPortfolioValuation("dollar test413", "2012-01-03"), ist.getPortfolioValuation("dollar test313", "2012-01-03"));
     //assertEquals(ist.getCostBasis("dollar test4", "2012-01-09"), ist.getCostBasis("dollar test3", "2012-01-09"));
-    Map<String, Double> hm2 =  ist.loadFlexiblePortfolio("dollar test313", "2012-01-09");
-    Map<String, Double> hm3 =  ist.loadFlexiblePortfolio("dollar test413", "2012-01-09");
+    Map<String, Double> hm2 =  ist.loadFlexiblePortfolio("dollar test313", "2012-01-03");
+    Map<String, Double> hm3 =  ist.loadFlexiblePortfolio("dollar test413", "2012-01-03");
     assertEquals(hm2.size(), hm3.size());
     for(String s: hm2.keySet()){
       if(!hm3.containsKey(s)){
@@ -575,11 +622,11 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     hm1.put("A",10.0);
     hm1.put("B",5.0);
     hm1.put("C",5.0);
-    ist.investAmount("dollar test412", hm, 2000.0, "2012-01-09", 20.0);
+    ist.investAmount("dollar test412", hm, 2000.0, "2012-01-03", 20.0);
     //assertEquals(ist.getPortfolioValuation("dollar test4", "2012-01-09"), ist.getPortfolioValuation("dollar test3", "2012-01-09"));
-    assertEquals(ist.getCostBasis("dollar test412", "2012-01-09"), ist.getCostBasis("dollar test312", "2012-01-09"));
-    Map<String, Double> hm2 =  ist.loadFlexiblePortfolio("dollar test312", "2012-01-09");
-    Map<String, Double> hm3 =  ist.loadFlexiblePortfolio("dollar test412", "2012-01-09");
+    assertEquals(ist.getCostBasis("dollar test412", "2012-01-03"), ist.getCostBasis("dollar test312", "2012-01-03"));
+    Map<String, Double> hm2 =  ist.loadFlexiblePortfolio("dollar test312", "2012-01-03");
+    Map<String, Double> hm3 =  ist.loadFlexiblePortfolio("dollar test412", "2012-01-03");
     assertEquals(hm2.size(), hm3.size());
     for(String s: hm2.keySet()){
       if(!hm3.containsKey(s)){
@@ -635,6 +682,17 @@ public class InvestorImplExtensionStrategyDollarCostTest {
     hm1.put("A",10.0);
     hm1.put("B",5.0);
     hm1.put("C",5.0);
+    ist.investAmount("dollar test422", hm, 2000.0, "2012-01-03", 20.0);
+    assertEquals(ist.getPortfolioValuation("dollar test422", "2012-01-03"), ist.getPortfolioValuation("dollar test322", "2012-01-03"));
+    //assertEquals(ist.getCostBasis("dollar test4", "2012-01-09"), ist.getCostBasis("dollar test3", "2012-01-09"));
+    Map<String, Double> hm0 =  ist.loadFlexiblePortfolio("dollar test322", "2012-01-03");
+    Map<String, Double> hm00 =  ist.loadFlexiblePortfolio("dollar test422", "2012-01-03");
+    assertEquals(hm0.size(), hm00.size());
+    for(String s: hm0.keySet()){
+      if(!hm00.containsKey(s)){
+        fail("Not equal. Test failed");
+      }
+    }
     ist.investAmount("dollar test422", hm, 2000.0, "2012-01-09", 20.0);
     assertEquals(ist.getPortfolioValuation("dollar test422", "2012-01-09"), ist.getPortfolioValuation("dollar test322", "2012-01-09"));
     assertEquals(ist.getCostBasis("dollar test422", "2012-01-09"), ist.getCostBasis("dollar test322", "2012-01-09"));
