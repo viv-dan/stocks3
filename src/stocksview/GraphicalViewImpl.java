@@ -291,13 +291,16 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     String[] columns = {"Stock","Quantity"};
     String [][] data=new String[portfolio.size()][2];
     int i;
+    DecimalFormat df = new DecimalFormat();
     i=0;
     for (String s:portfolio.keySet()) {
       data[i][0]=s;
-      data[i][1]= String.valueOf(portfolio.get(s));
+      data[i][1]= df.format(portfolio.get(s));
+      i++;
     }
     JTable j=new JTable(data,columns);
-    second.add(j);
+    JScrollPane sc= new JScrollPane(j);
+    second.add(sc);
     validate();
   }
 
