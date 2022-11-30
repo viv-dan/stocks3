@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * The class implements the InvestorExtension interface and its defined methods for facilitating
  * flexible portfolios while retaining the inflexible portfolio implementations.
  */
-public class InvestorImplExtension extends abstractInvestorextensions implements InvestorExtension {
+public class InvestorImplExtension extends AbstractInvestorExtensions implements InvestorExtension {
 
   private static String FILENAME = System.getProperty("user.dir") + "/stocks2.json";
   private static List<Portfolio> cachePortfolios = new ArrayList<>();
@@ -211,7 +211,7 @@ public class InvestorImplExtension extends abstractInvestorextensions implements
     validateInputs(portfolio, commissionFeeValue, date, ticker, quantity);
     futureDateCheck(date);
     try {
-      Double cost = StockImpl.getBuilder().ticker(ticker).build().getStockValue(date)*quantity;
+      Double cost = StockImpl.getBuilder().ticker(ticker).build().getStockValue(date) * quantity;
       JSONObject data = readJSON();
       JSONObject portfolioObject = (JSONObject) data.get(portfolio);
       if (portfolioObject == null) {

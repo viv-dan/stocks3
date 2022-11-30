@@ -12,7 +12,8 @@ import java.util.Map;
  * The class implements the InvestorExtensionInvestStrategy interface and its defined methods for
  * facilitating dollar cost averaging strategy and a lump sum strategy.
  */
-public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorextensions implements InvestorExtensionInvestStrategy {
+public class InvestorExtensionStrategyDollarCostAvg extends AbstractInvestorExtensions
+        implements InvestorExtensionInvestStrategy {
 
   private static final String FILENAME = System.getProperty("user.dir") + "/dollarcostavg.json";
   private final InvestorExtension delegate;
@@ -82,14 +83,15 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
   @Override
   public void investAmount(String portfolio, Map<String, Double> weights, Double amount,
                            String date, Double commissionFee) throws RuntimeException {
-    if(weights==null || amount ==null || portfolio==null || date ==null || commissionFee==null ){
+    if (weights == null || amount == null || portfolio == null || date == null
+            || commissionFee == null) {
       throw new RuntimeException("invalid input");
     }
     this.weightChecker(weights);
-    if(amount == null || amount <= 0 ){
+    if (amount == null || amount <= 0) {
       throw new RuntimeException("invalid amount");
     }
-    if(getDateFromString(date).after(new Date())){
+    if (getDateFromString(date).after(new Date())) {
       this.highLevelInvestStrategy(portfolio, date, date, 1, commissionFee, amount, weights);
       return;
     }
@@ -104,12 +106,12 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
     }
   }
 
-  private void weightChecker(Map<String, Double> weights){
+  private void weightChecker(Map<String, Double> weights) {
     double totalWeight = 0.0;
-    for(String ticker : weights.keySet()){
-      totalWeight+=weights.get(ticker);
+    for (String ticker : weights.keySet()) {
+      totalWeight += weights.get(ticker);
     }
-    if(totalWeight<100 || totalWeight>100){
+    if (totalWeight < 100 || totalWeight > 100) {
       throw new RuntimeException("invalid weights");
     }
   }
@@ -118,28 +120,28 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
   public void highLevelInvestStrategy(String portfolio, String startDate, String endDate,
                                       Integer recurrenceDays, Double commissionFee,
                                       Double amount, Map<String, Double> weights)
-                                      throws RuntimeException {
-    if(portfolio ==null || startDate ==null || recurrenceDays==null ||
-            commissionFee==null || amount==null || weights==null){
+          throws RuntimeException {
+    if (portfolio == null || startDate == null || recurrenceDays == null
+            || commissionFee == null || amount == null || weights == null) {
       throw new RuntimeException("invalid inputs");
     }
     this.weightChecker(weights);
     Date start = getDateFromString(startDate);
-    if(endDate!=null) {
+    if (endDate != null) {
       Date end = getDateFromString(endDate);
-      if(start.after(end)){
+      if (start.after(end)) {
         throw new RuntimeException("start date cannot be after end date");
       }
     }
-    if(!(recurrenceDays>0) || commissionFee<0 || amount <= 0){
+    if (!(recurrenceDays > 0) || commissionFee < 0 || amount <= 0) {
       throw new RuntimeException("invalid input");
     }
-    if(!delegate.loadAllPortfolioNames().contains(portfolio+ " - flexible")){
+    if (!delegate.loadAllPortfolioNames().contains(portfolio + " - flexible")) {
       throw new RuntimeException("Portfolio doesn't exist");
     }
     Calendar c = Calendar.getInstance();
     c.setTime(getDateFromString(startDate));
-    c.add(Calendar.DATE, recurrenceDays*(-1));
+    c.add(Calendar.DATE, recurrenceDays * (-1));
     startDate = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
     this.persistStrategy(portfolio, startDate, endDate, recurrenceDays, commissionFee, amount,
             weights);
@@ -158,11 +160,13 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
       c.setTime(startingDate);
       c.add(Calendar.DATE, recurrenceDays);
       String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-      if (!getDateFromString(formattedDate).after(endingDate) && !getDateFromString(formattedDate).after(new Date())) {
+      if (!getDateFromString(formattedDate).after(endingDate)
+              && !getDateFromString(formattedDate).after(new Date())) {
         startingDate = getDateFromString(formattedDate);
         while (true) {
           try {
-            if(getDateFromString(formattedDate).after(new Date()) || getDateFromString(formattedDate).after(endingDate)){
+            if (getDateFromString(formattedDate).after(new Date())
+                    || getDateFromString(formattedDate).after(endingDate)) {
               break;
             }
             this.investAmount(portfolio, weights, amount, formattedDate, commissionFee);
@@ -187,47 +191,47 @@ public class InvestorExtensionStrategyDollarCostAvg extends abstractInvestorexte
                                Integer recurrenceDays, Double commissionFee,
                                Double amount, Map<String, Double> weights) {
     JSONObject data;
-      data = readJSON();
-      JSONArray portfolioObj = (JSONArray) data.get(portfolio);
-      if (portfolioObj == null) {
-        portfolioObj = new JSONArray();
-      }
-      JSONObject strategy = new JSONObject();
-      JSONObject weightsObj = new JSONObject(weights);
-      strategy.put("startDate", startDate);
-      strategy.put("endDate", endDate);
-      strategy.put("recurrenceDays", recurrenceDays);
-      strategy.put("commissionFee", commissionFee);
-      strategy.put("amount", amount);
-      strategy.put("weights", weightsObj);
-      portfolioObj.add(strategy);
-      data.put(portfolio, portfolioObj);
-      writeToJSON(data);
+    data = readJSON();
+    JSONArray portfolioObj = (JSONArray) data.get(portfolio);
+    if (portfolioObj == null) {
+      portfolioObj = new JSONArray();
+    }
+    JSONObject strategy = new JSONObject();
+    JSONObject weightsObj = new JSONObject(weights);
+    strategy.put("startDate", startDate);
+    strategy.put("endDate", endDate);
+    strategy.put("recurrenceDays", recurrenceDays);
+    strategy.put("commissionFee", commissionFee);
+    strategy.put("amount", amount);
+    strategy.put("weights", weightsObj);
+    portfolioObj.add(strategy);
+    data.put(portfolio, portfolioObj);
+    writeToJSON(data);
   }
 
   private void loadAndUpdateStrategy(String portfolioName) {
     JSONObject data;
-      data = readJSON();
-      JSONArray portfolio = (JSONArray) data.get(portfolioName);
-      if (portfolio == null) {
-        return;
+    data = readJSON();
+    JSONArray portfolio = (JSONArray) data.get(portfolioName);
+    if (portfolio == null) {
+      return;
+    }
+    for (int i = 0; i < portfolio.size(); i++) {
+      JSONObject strategy = (JSONObject) portfolio.get(i);
+      String endDate = null;
+      if (strategy.get("endDate") != null) {
+        endDate = strategy.get("endDate").toString();
       }
-      for (int i = 0; i < portfolio.size(); i++) {
-        JSONObject strategy = (JSONObject) portfolio.get(i);
-        String endDate = null;
-        if (strategy.get("endDate") != null) {
-          endDate = strategy.get("endDate").toString();
-        }
-        String startDate = this.implementStrategy(portfolioName,
-                strategy.get("startDate").toString(),
-                endDate,
-                Integer.parseInt(strategy.get("recurrenceDays").toString()),
-                Double.parseDouble(strategy.get("commissionFee").toString()),
-                Double.parseDouble(strategy.get("amount").toString()),
-                (Map<String, Double>) strategy.get("weights"));
-        strategy.put("startDate", startDate);
-      }
-      writeToJSON(data);
+      String startDate = this.implementStrategy(portfolioName,
+              strategy.get("startDate").toString(),
+              endDate,
+              Integer.parseInt(strategy.get("recurrenceDays").toString()),
+              Double.parseDouble(strategy.get("commissionFee").toString()),
+              Double.parseDouble(strategy.get("amount").toString()),
+              (Map<String, Double>) strategy.get("weights"));
+      strategy.put("startDate", startDate);
+    }
+    writeToJSON(data);
   }
 
   @Override

@@ -108,13 +108,13 @@ public class InvestorImplExtensionTest {
   @Test
   public void testGetPortfolioValuationOnSunday() {
     Double valueOfRush = il.getPortfolioValuation("invest fi", "2022-11-05");
-    assertEquals(0,valueOfRush,0);
+    assertEquals(0, valueOfRush, 0);
   }
 
   @Test
   public void testGetPortfolioValuationOnVeryPastDate() {
     Double valueOfRush = il.getPortfolioValuation("invest fi", "1900-11-05");
-    assertEquals(0,valueOfRush,0);
+    assertEquals(0, valueOfRush, 0);
   }
 
   @Test(expected = RuntimeException.class)
