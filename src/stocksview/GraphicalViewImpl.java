@@ -42,6 +42,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JButton submitDollar;
   private JButton showValue;
   private JButton changeFile;
+  private JDialog n;
 
   private JButton openBrowser;
   private JButton investStrategy;
@@ -56,6 +57,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JTextField endDate ;
   private JLabel endDateLabel ;
   private JTextField recurrenceDays;
+  private Loading l;
 
   private JLabel recurrenceDaysLabel ;
   private JTextField commissionAmount;
@@ -114,7 +116,9 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     setVisible(true);
     showMenu();
     mainPanel.add(second);
+    l = new Loading(this, true);
   }
+
   public void showMenu(){
     mainPanel.repaint();
     second.removeAll();
@@ -159,6 +163,10 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     resetFocus();
   }
 
+  @Override
+  public void showLoad(){
+    l.formWindowActivated();
+  }
 
   @Override
   public void addFeatures(Features feature) {
@@ -210,6 +218,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     mainPanel.repaint();
     validate();
   }
+
   private Double getCommissionAmount(){
     try {
       double fee;
@@ -226,6 +235,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
       return null;
     }
   }
+
   private Double getAmount(){
     try {
       double fee;

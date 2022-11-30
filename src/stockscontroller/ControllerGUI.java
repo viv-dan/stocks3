@@ -58,13 +58,16 @@ public class ControllerGUI implements Features{
       checkNull(portfolio);
       name=portfolio.get(0);
       date=portfolio.get(1);
+      g1.showLoad();
       double value = i1.getCostBasis(name,date);
+      g1.showLoad();
       g1.showCostOfPortfolio(value,date);
     }
     catch (Exception e){
       g1.showInputError(e.getMessage());
     }
   }
+
   private void checkNull(ArrayList<String> check){
     for (String n:check) {
       if(n.isEmpty() || n==null){

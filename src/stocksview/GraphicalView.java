@@ -7,6 +7,7 @@ import stockscontroller.Features;
 public interface GraphicalView extends View {
 
   void addFeatures(Features feature);
+  void showLoad();
   String showParticularPortfolio();
   ArrayList<String> showPortfolioDate();
   void resetFocus();
