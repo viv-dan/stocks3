@@ -2,20 +2,20 @@ package stocksview;
 
 import javax.swing.JFrame;
 
-public final class Loading extends javax.swing.JDialog {
+final class Loading extends javax.swing.JDialog {
 
-  public Loading() {
+  Loading() {
     this.setSize(300, 100);
     this.setLocation(500, 300);
     this.setTitle("Loading...Please wait");
     this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
   }
 
-  public void formWindowDeActivated() {
+  void formWindowDeActivated() {
     this.dispose();
   }
 
-  public void formWindowActivated() {
+  void formWindowActivated() {
     this.setVisible(true);
   }
 }

@@ -14,6 +14,9 @@ import stocksview.GraphicalView;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This class is a test class for ControllerGuI using mock view object.
+ */
 public class ControllerGUITest {
   InvestorExtensionInvestStrategy i;
   Features c;
@@ -727,17 +730,17 @@ public class ControllerGUITest {
 
     @Override
     public void addFeatures(Features feature) {
-
+      return;
     }
 
     @Override
     public void showLoad() {
-
+      return;
     }
 
     @Override
     public void showOffLoad() {
-
+      return;
     }
 
     @Override
@@ -755,7 +758,7 @@ public class ControllerGUITest {
 
     @Override
     public void resetFocus() {
-
+      return;
     }
 
     @Override
@@ -765,12 +768,12 @@ public class ControllerGUITest {
 
     @Override
     public void chooseWhichPortfolio() {
-
+      return;
     }
 
     @Override
     public void chooseBuyOrSell() {
-
+      return;
     }
 
     @Override
@@ -780,7 +783,7 @@ public class ControllerGUITest {
 
     @Override
     public void chooseWhichPortfolioOption() {
-
+      return;
     }
 
     @Override
@@ -790,17 +793,17 @@ public class ControllerGUITest {
 
     @Override
     public void chooseWhichStrategy() {
-
+      return;
     }
 
     @Override
     public void investFixedForm() {
-
+      return;
     }
 
     @Override
     public void showMenu() {
-
+      return;
     }
 
     @Override

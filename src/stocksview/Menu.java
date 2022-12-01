@@ -5,13 +5,6 @@ import java.io.PrintStream;
 
 /**
  * The interface specifies the features of Menu view for text based program.
- *
- * <p>UPDATES :
- * Added new method showCostOfPortfolio which shows cost basis for a flexible portfolio.
- * Added new method plot which handles the plotting of the graph
- * when a map of dates and values is passed.
- * Removed show list of stocks methods, since now we are extending the design to many stocks,
- * thus we don't need to show the list of all valid tickers as the list is extensive.</p>
  */
 public interface Menu extends View {
 

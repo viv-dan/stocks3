@@ -51,7 +51,6 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
   private JButton exitButton;
   private JButton buy;
   private JButton sell;
-  private JButton goBack;
   private JButton submit;
   private JButton submitDollar;
   private JButton showValue;
@@ -77,17 +76,14 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
   private JLabel commissionAmountLabel;
 
   private JPanel mainPanel;
-  private JPanel menu;
   private JPanel second;
-  private JScrollPane mainScrollPane;
 
   /**
    * The constructor for the graphical view impl class.
    */
   public GraphicalViewImpl() {
+
     super("Welcome");
-    goBack = new JButton("Go Back to Main Menu");
-    goBack.setActionCommand("GoBack");
     getInflexiblePortfolio = new JButton("Inflexible Portfolio");
     getFlexiblePortfolio = new JButton("Flexible Portfolio");
     buy = new JButton("Buy a stock in a Portfolio");
@@ -129,7 +125,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
     mainPanel = new JPanel();
     second = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-    mainScrollPane = new JScrollPane(mainPanel);
+    JScrollPane mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
     setVisible(true);
     showMenu();
@@ -143,7 +139,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
   public void showMenu() {
     mainPanel.repaint();
     second.removeAll();
-    menu = new JPanel();
+    JPanel menu = new JPanel();
     menu.setBorder(BorderFactory.createTitledBorder("Menu"));
     menu.setLayout(new BoxLayout(menu, BoxLayout.PAGE_AXIS));
 
@@ -154,17 +150,17 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
     showParticularPortfolio.setActionCommand("showParticularPortfolio");
     createPortfolio = new JButton("Create Flexible Portfolio");
     createPortfolio.setActionCommand("createPortfolio");
-    showValue = new JButton("Portfolio Value");
+    showValue = new JButton("Get Portfolio Value");
     showValue.setActionCommand("valueOfP");
     getCostBasis = new JButton("Get cost Basis of a particular Portfolio");
     getCostBasis.setActionCommand("costBasis");
     performTransaction = new JButton("Perform a Buy or Sell Transaction");
     performTransaction.setActionCommand("performBuySell");
-    changeFile = new JButton("Change File");
+    changeFile = new JButton("Change Storage File of Portfolios/Retrieve portfolios from");
     changeFile.setActionCommand("changeFile");
-    investStrategy = new JButton("Investment Strategy");
+    investStrategy = new JButton("Implement Investment Strategy");
     investStrategy.setActionCommand("strategy");
-    plotGraph = new JButton("Graph");
+    plotGraph = new JButton("Get Performance Graph of Portfolio");
     plotGraph.setActionCommand("graph");
     exitButton = new JButton("Exit");
     exitButton.setActionCommand("exit");

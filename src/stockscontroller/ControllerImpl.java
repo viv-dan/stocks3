@@ -295,7 +295,8 @@ public class ControllerImpl implements Controller {
             return;
           }
         }
-      } while (temp);
+      }
+      while (temp);
     }
     m1.plot(trial);
     m1.goBackMessage();

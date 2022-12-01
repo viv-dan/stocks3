@@ -386,7 +386,8 @@ public class ControllerGUI implements Features {
             return;
           }
         }
-      } while (temp);
+      }
+      while (temp);
     }
     g1.showOffLoad();
     g1.plot(trial);

@@ -133,7 +133,7 @@ public class InvestorExtensionStrategyDollarCostAvg extends AbstractInvestorExte
         throw new RuntimeException("start date cannot be after end date");
       }
     }
-    if (!(recurrenceDays > 0) || commissionFee < 0 || amount <= 0) {
+    if (recurrenceDays <= 0 || commissionFee < 0 || amount <= 0) {
       throw new RuntimeException("invalid input");
     }
     if (!delegate.loadAllPortfolioNames().contains(portfolio + " - flexible")) {

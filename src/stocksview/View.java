@@ -3,6 +3,10 @@ package stocksview;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The interface represents a graphical user interface and defines all the methods needed for
+ * various functions on the portfolios.
+ */
 public interface View {
 
   /**

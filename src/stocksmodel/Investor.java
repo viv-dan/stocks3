@@ -6,10 +6,6 @@ import java.util.Map;
 /**
  * The interface specifies the methods that are available to be able to create, persist and also
  * valuate portfolios.
- *
- * <p>UPDATES:
- * getStocks() method has been removed as now we are supporting all the stocks instead of a set
- * of stocks.</p>
  */
 interface Investor {
 

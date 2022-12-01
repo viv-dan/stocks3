@@ -60,6 +60,8 @@ public interface InvestorExtension extends Investor {
 
   /**
    * The method returns the stock composition of the flexible portfolio until the desired date.
+   * UPDATE: The return type of the method has been changed from Map(String, Integer) to
+   * Map(String, Double) as it has to return the fractional stock quantities.
    *
    * @param name the name of the portfolio that the composition has to be returned
    * @param date the date until which the composition has to be returned
