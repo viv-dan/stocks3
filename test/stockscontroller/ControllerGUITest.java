@@ -715,7 +715,94 @@ public class ControllerGUITest {
     out.print("Investing in Existing PortfolioSuccess");
     assertEquals(bytes.toString(),b.toString());
   }
+  @Test
+  public void testInvalidWeightsDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",2000.0,"2022-01-01",
+            "2022-11-11",20.1,"30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing Portfolioinvalid weights");
+    assertEquals(bytes.toString(),b.toString());
+  }
+  @Test
+  public void testInvalidCommissionDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("V",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",2000.0,"2022-01-01",
+            "2022-11-11",-20.1,"30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing Portfolioinvalid input");
+    assertEquals(bytes.toString(),b.toString());
+  }
 
-
-
+  @Test
+  public void testInvalidAmountDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("V",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",-2000.0,"2022-01-01",
+            "2022-11-11",20.1,"30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing Portfolioinvalid input");
+    assertEquals(bytes.toString(),b.toString());
+  }
+  @Test
+  public void testInvalidDateDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("V",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",2000.0,"asd-01-01",
+            "2022-11-11",20.1,"30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing PortfolioInvalid date Unparseable date: \"asd-01-01\"");
+    assertEquals(bytes.toString(),b.toString());
+  }
+  @Test
+  public void testInvalidEndDateDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("V",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",2000.0,"2022-01-01",
+            "asd-11-11",20.1,"30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing PortfolioInvalid date Unparseable date: \"asd-11-11\"");
+    assertEquals(bytes.toString(),b.toString());
+  }
+  @Test
+  public void testInvalidRecurrenceDollarAverageAmount(){
+    Map<String,Double> weights=new HashMap<>();
+    weights.put("AAPL",50.0);
+    weights.put("VZ",12.5);
+    weights.put("V",12.5);
+    weights.put("GOOG",12.5);
+    weights.put("AMZN",12.5);
+    c.dollarAverageInvesting(weights,"welcome",2000.0,"2022-01-01",
+            "2022-11-11",20.1,"-30");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    out.print("Investing in Existing Portfolioinvalid input");
+    assertEquals(bytes.toString(),b.toString());
+  }
 }
