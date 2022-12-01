@@ -4,11 +4,6 @@ import javax.swing.*;
 
 public final class Loading extends javax.swing.JDialog {
 
-  /*
-   * Creates new form Loading
-   * @param parent
-   * @param modal
-   */
   public Loading(java.awt.Frame parent,boolean modal) {
     //super(new Frame(), modal);
     this.setSize(300,100);
@@ -16,12 +11,11 @@ public final class Loading extends javax.swing.JDialog {
     this.setTitle("Loading...Please wait");
     this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
   }
+  public void formWindowDeActivated(){
+    this.dispose();
+  }
 
   public void formWindowActivated() {
-    if(this.isVisible()){
-      this.dispose();
-    }else{
-      this.setVisible(true);
-    }
+    this.setVisible(true);
   }
 }

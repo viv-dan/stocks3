@@ -42,10 +42,13 @@ public class ControllerGUI implements Features{
       checkNull(portfolio);
       name= portfolio.get(0);
       date=portfolio.get(1);
+      g1.showLoad();
       Map<String,Double> port = i1.loadFlexiblePortfolio(name,date);
+      g1.showOffLoad();
       g1.showStocks(port);
     }
     catch (Exception e){
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }
@@ -60,10 +63,11 @@ public class ControllerGUI implements Features{
       date=portfolio.get(1);
       g1.showLoad();
       double value = i1.getCostBasis(name,date);
-      g1.showLoad();
+      g1.showOffLoad();
       g1.showCostOfPortfolio(value,date);
     }
     catch (Exception e){
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }
@@ -87,10 +91,17 @@ public class ControllerGUI implements Features{
       ticker=values.get(2);
       quantity= Integer.parseInt(values.get(3));
       commission= Double.parseDouble(values.get(4));
+      g1.showLoad();
       i1.createBuyTransaction(name,commission,date,ticker,quantity);
+      g1.showOffLoad();
       g1.successMessage();
     }
+    catch (NumberFormatException e1){
+      g1.showOffLoad();
+      g1.showInputError("Enter whole numbers for quantity");
+    }
     catch (Exception e){
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }
@@ -106,10 +117,17 @@ public class ControllerGUI implements Features{
       ticker=values.get(2);
       quantity= Integer.parseInt(values.get(3));
       commission= Double.parseDouble(values.get(4));
+      g1.showLoad();
       i1.createSellTransaction(name,commission,date,ticker,quantity);
+      g1.showOffLoad();
       g1.successMessage();
     }
+    catch (NumberFormatException e1){
+      g1.showOffLoad();
+      g1.showInputError("Enter whole numbers for quantity");
+    }
     catch (Exception e){
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }
@@ -144,8 +162,11 @@ public class ControllerGUI implements Features{
       sd= values.get(1);
       ed= values.get(2);
     try {
+      g1.showLoad();
       i1.getPortfolioValuation(name, "2022-10-11");
+      g1.showOffLoad();
     } catch (RuntimeException e) {
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
       return;
     }
@@ -171,7 +192,7 @@ public class ControllerGUI implements Features{
 
   @Override
   public void investFixedAmount(Map<String, Double> formData, String name, String date,Double commissionFee,Double amount) {
-    if(name==null || date==null || formData==null || commissionFee==null){
+    if(name==null || date==null || formData==null || commissionFee==null || checkMapNull(formData)){
       g1.showInputError("Invalid input");
     }
     else{
@@ -184,30 +205,58 @@ public class ControllerGUI implements Features{
     }
 
   }
-
+  private boolean checkMapNull(Map<String,Double> value){
+    if (value==null){
+      return true;
+    }
+    else if(value.isEmpty()){
+      return true;
+    }
+    else {
+      for (String n:value.keySet()) {
+        if(n.isEmpty() || n== null || value.get(n)==null){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   @Override
   public void dollarAverageInvesting(Map<String, Double> formData,
                                      String portfolioName, Double amount,
                                      String startDate, String endDate,
                                      Double commissionAmount, String recurrence) {
     if(portfolioName==null || amount ==null ||
-            startDate==null || endDate ==null ||
-          commissionAmount==null || recurrence==null){
+            startDate==null ||
+          commissionAmount==null || recurrence==null || formData==null ||checkMapNull(formData)){
       g1.showInputError("Invalid Input");
+      return;
     }
     else {
+      if(endDate.equals("")){
+        endDate=null;
+      }
       try {
         try{
           i1.loadPortfolio(portfolioName);
-          g1.showInputError("Portfolio with name already exists");
+          g1.showInputError("Can't Invest in a Inflexible Portfolio");
           return;
         }catch (Exception e){
-          i1.createFlexiblePortfolio(portfolioName);
+          try{
+            i1.createFlexiblePortfolio(portfolioName);
+            g1.showInputError("Created a new Portfolio");
+          }catch (Exception e1){
+            g1.showInputError("Investing in Existing Portfolio");
+          }
         }
+
         i1.highLevelInvestStrategy(portfolioName,startDate,endDate,
                 Integer.parseInt(recurrence),commissionAmount,amount,formData);
         g1.successMessage();
-      }catch (Exception e){
+      }catch (NumberFormatException e){
+        g1.showInputError("Enter whole number value for recurrence days");
+      }
+      catch (Exception e){
         g1.showInputError(e.getMessage());
       }
     }
@@ -309,6 +358,7 @@ public class ControllerGUI implements Features{
     double value;
     int i;
     int count;
+    g1.showLoad();
     for (i = 0; i < dates.size(); i++) {
       temp = true;
       call = (dates.get(i));
@@ -330,6 +380,7 @@ public class ControllerGUI implements Features{
             cal.add(Calendar.DAY_OF_MONTH, -1);
             call = sdf.format(cal.getTime());
           } catch (ParseException ex) {
+            g1.showOffLoad();
             g1.showInputError("Parse exception");
             return;
           }
@@ -337,6 +388,7 @@ public class ControllerGUI implements Features{
       }
       while (temp);
     }
+    g1.showOffLoad();
     g1.plot(trial);
   }
 
@@ -366,9 +418,12 @@ public class ControllerGUI implements Features{
       checkNull(portfolio);
       name= portfolio.get(0);
       date= portfolio.get(1);
+      g1.showLoad();
       g1.showValueOfPortfolio(i1.getPortfolioValuation(name,date),name);
+      g1.showOffLoad();
     }
     catch (Exception e){
+      g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }

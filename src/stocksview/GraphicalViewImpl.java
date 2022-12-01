@@ -81,7 +81,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     createFlexible.setActionCommand("createFlexible");
     investAmount=new JButton("Invest Fixed Amount in Existing Portfolio");
     investAmount.setActionCommand("fixedAmount");
-    highLevelStrategy=new JButton("Invest By Dollar Cost Averaging Strategy by creating New Portfolio");
+    highLevelStrategy=new JButton("Invest By Dollar Cost Averaging Strategy "
+            +"in New Portfolio/Existing Portfolio");
     highLevelStrategy.setActionCommand("highLevelInvest");
     submit=new JButton("Submit");
     submit.setActionCommand("submitInvestForm");
@@ -166,6 +167,11 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   @Override
   public void showLoad(){
     l.formWindowActivated();
+  }
+
+  @Override
+  public void showOffLoad() {
+    l.formWindowDeActivated();
   }
 
   @Override
@@ -389,7 +395,12 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     values.add(date.getText());
     values.add(ticker.getText());
     values.add(quantity.getText());
-    values.add(commissionAmount.getText());
+    if(commissionAmount.getText()==null || commissionAmount.getText().isEmpty()){
+      values.add("0");
+    }
+    else {
+      values.add(commissionAmount.getText());
+    }
     return values;
   }
 

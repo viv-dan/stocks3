@@ -8,6 +8,7 @@ public interface GraphicalView extends View {
 
   void addFeatures(Features feature);
   void showLoad();
+  void showOffLoad();
   String showParticularPortfolio();
   ArrayList<String> showPortfolioDate();
   void resetFocus();
