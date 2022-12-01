@@ -17,11 +17,6 @@ import stocksview.Menu;
 /**
  * This class implements the Controller interface which communicates with model and view classes.
  * The constructor takes in a Menu and an Investor object.
- *
- * <p>UPDATES:
- * Added new Switch cases in the startProgram method to incorporate new features.
- * The parameter for the constructor has been changed to an extension Investor
- * interface model type.</p>
  */
 public class ControllerImpl implements Controller {
   private final InvestorExtension i1;
@@ -32,8 +27,6 @@ public class ControllerImpl implements Controller {
    * The constructor method creates an ControllerImpl object. It takes in a Menu view, Investor
    * model object, an input stream and an output stream object for taking in inputs and writing
    * to the stream respectively.
-   * UPDATE: Change in the type of parameter in the constructor,previously it accepted
-   * Investor Model object, now it takes in the Investor Extension Interface type object.
    *
    * @param i   investorextension model object for data retrieval
    * @param m   menu view object for writing to the stream
@@ -302,8 +295,7 @@ public class ControllerImpl implements Controller {
             return;
           }
         }
-      }
-      while (temp);
+      } while (temp);
     }
     m1.plot(trial);
     m1.goBackMessage();
@@ -406,8 +398,8 @@ public class ControllerImpl implements Controller {
         s = sc.nextLine();
         Map<String, Integer> first = i1.loadPortfolio(s);
         Map<String, Double> hm = new HashMap<>();
-        for(String ss : first.keySet()){
-          hm.put(ss,Double.parseDouble(first.get(ss).toString()));
+        for (String ss : first.keySet()) {
+          hm.put(ss, Double.parseDouble(first.get(ss).toString()));
         }
         m1.showStocks(hm);
       } else {

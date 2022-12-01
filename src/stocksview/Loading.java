@@ -1,17 +1,17 @@
 package stocksview;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public final class Loading extends javax.swing.JDialog {
 
-  public Loading(java.awt.Frame parent,boolean modal) {
-    //super(new Frame(), modal);
-    this.setSize(300,100);
-    this.setLocation(500,300);
+  public Loading() {
+    this.setSize(300, 100);
+    this.setLocation(500, 300);
     this.setTitle("Loading...Please wait");
     this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
   }
-  public void formWindowDeActivated(){
+
+  public void formWindowDeActivated() {
     this.dispose();
   }
 

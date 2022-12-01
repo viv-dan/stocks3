@@ -9,23 +9,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-
 import stocksmodel.InvestorExtensionInvestStrategy;
 import stocksview.GraphicalView;
 
-public class ControllerGUI implements Features{
-  private InvestorExtensionInvestStrategy i1;
+/**
+ * This class implements the features interface and acts as the main controller for the GUI view. It
+ * communicates with model and view objects.
+ */
+public class ControllerGUI implements Features {
+  private final InvestorExtensionInvestStrategy i1;
   private GraphicalView g1;
 
-  public ControllerGUI(InvestorExtensionInvestStrategy i){
-    this.i1=i;
+  public ControllerGUI(InvestorExtensionInvestStrategy i) {
+    this.i1 = i;
   }
 
-  public void setView(GraphicalView g){
-    this.g1=g;
+  public void setView(GraphicalView g) {
+    this.g1 = g;
     g1.addFeatures(this);
   }
+
   @Override
   public void showPortfolios() {
     List<String> names = i1.loadAllPortfolioNames();
@@ -40,14 +43,13 @@ public class ControllerGUI implements Features{
       String name;
       String date;
       checkNull(portfolio);
-      name= portfolio.get(0);
-      date=portfolio.get(1);
+      name = portfolio.get(0);
+      date = portfolio.get(1);
       g1.showLoad();
-      Map<String,Double> port = i1.loadFlexiblePortfolio(name,date);
+      Map<String, Double> port = i1.loadFlexiblePortfolio(name, date);
       g1.showOffLoad();
       g1.showStocks(port);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
@@ -59,22 +61,21 @@ public class ControllerGUI implements Features{
       String name;
       String date;
       checkNull(portfolio);
-      name=portfolio.get(0);
-      date=portfolio.get(1);
+      name = portfolio.get(0);
+      date = portfolio.get(1);
       g1.showLoad();
-      double value = i1.getCostBasis(name,date);
+      double value = i1.getCostBasis(name, date);
       g1.showOffLoad();
-      g1.showCostOfPortfolio(value,date);
-    }
-    catch (Exception e){
+      g1.showCostOfPortfolio(value, date);
+    } catch (Exception e) {
       g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
   }
 
-  private void checkNull(ArrayList<String> check){
-    for (String n:check) {
-      if(n.isEmpty() || n==null){
+  private void checkNull(ArrayList<String> check) {
+    for (String n : check) {
+      if (n.isEmpty() || n == null) {
         throw new RuntimeException("Fields can't be empty");
       }
     }
@@ -83,24 +84,25 @@ public class ControllerGUI implements Features{
   @Override
   public void performBuy(ArrayList<String> values) {
     try {
-      String name,date,ticker;
-      double quantity,commission;
+      String name;
+      String date;
+      String ticker;
+      double quantity;
+      double commission;
       checkNull(values);
-      name= values.get(0);
-      date=values.get(1);
-      ticker=values.get(2);
-      quantity= Integer.parseInt(values.get(3));
-      commission= Double.parseDouble(values.get(4));
+      name = values.get(0);
+      date = values.get(1);
+      ticker = values.get(2);
+      quantity = Integer.parseInt(values.get(3));
+      commission = Double.parseDouble(values.get(4));
       g1.showLoad();
-      i1.createBuyTransaction(name,commission,date,ticker,quantity);
+      i1.createBuyTransaction(name, commission, date, ticker, quantity);
       g1.showOffLoad();
       g1.successMessage();
-    }
-    catch (NumberFormatException e1){
+    } catch (NumberFormatException e1) {
       g1.showOffLoad();
       g1.showInputError("Enter whole numbers for quantity");
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
@@ -109,24 +111,25 @@ public class ControllerGUI implements Features{
   @Override
   public void performSell(ArrayList<String> values) {
     try {
-      String name,date,ticker;
-      double quantity,commission;
+      String name;
+      String date;
+      String ticker;
+      double quantity;
+      double commission;
       checkNull(values);
-      name= values.get(0);
-      date=values.get(1);
-      ticker=values.get(2);
-      quantity= Integer.parseInt(values.get(3));
-      commission= Double.parseDouble(values.get(4));
+      name = values.get(0);
+      date = values.get(1);
+      ticker = values.get(2);
+      quantity = Integer.parseInt(values.get(3));
+      commission = Double.parseDouble(values.get(4));
       g1.showLoad();
-      i1.createSellTransaction(name,commission,date,ticker,quantity);
+      i1.createSellTransaction(name, commission, date, ticker, quantity);
       g1.showOffLoad();
       g1.successMessage();
-    }
-    catch (NumberFormatException e1){
+    } catch (NumberFormatException e1) {
       g1.showOffLoad();
       g1.showInputError("Enter whole numbers for quantity");
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }
@@ -134,33 +137,35 @@ public class ControllerGUI implements Features{
 
   @Override
   public void createFlexiblePortfolio() {
-    try{
+    try {
       String name;
-      name=g1.showParticularPortfolio();
-      try{
+      name = g1.showParticularPortfolio();
+      try {
         i1.loadPortfolio(name);
-      }catch (Exception e){
+      } catch (Exception e) {
         i1.createFlexiblePortfolio(name);
         g1.successMessage();
       }
-    }catch (Exception e){
+    } catch (Exception e) {
       g1.showInputError(e.getMessage());
     }
   }
 
   @Override
   public void plotGraph(ArrayList<String> values) {
-    try{
+    try {
       checkNull(values);
 
-    }catch (Exception e){
+    } catch (Exception e) {
       g1.showInputError(e.getMessage());
       return;
     }
-      String sd,ed,name;
-      name= values.get(0);
-      sd= values.get(1);
-      ed= values.get(2);
+    String sd;
+    String ed;
+    String name;
+    name = values.get(0);
+    sd = values.get(1);
+    ed = values.get(2);
     try {
       g1.showLoad();
       i1.getPortfolioValuation(name, "2022-10-11");
@@ -191,72 +196,70 @@ public class ControllerGUI implements Features{
   }
 
   @Override
-  public void investFixedAmount(Map<String, Double> formData, String name, String date,Double commissionFee,Double amount) {
-    if(name==null || date==null || formData==null || commissionFee==null || checkMapNull(formData)){
+  public void investFixedAmount(Map<String, Double> formData, String name, String date,
+                                Double commissionFee, Double amount) {
+    if (name == null || date == null || formData == null || commissionFee == null
+            || checkMapNull(formData)) {
       g1.showInputError("Invalid input");
-    }
-    else{
-      try{
-        i1.investAmount(name,formData,amount,date,commissionFee);
+    } else {
+      try {
+        i1.investAmount(name, formData, amount, date, commissionFee);
         g1.successMessage();
-      }catch (Exception e){
+      } catch (Exception e) {
         g1.showInputError(e.getMessage());
       }
     }
 
   }
-  private boolean checkMapNull(Map<String,Double> value){
-    if (value==null){
+
+  private boolean checkMapNull(Map<String, Double> value) {
+    if (value == null) {
       return true;
-    }
-    else if(value.isEmpty()){
+    } else if (value.isEmpty()) {
       return true;
-    }
-    else {
-      for (String n:value.keySet()) {
-        if(n.isEmpty() || n== null || value.get(n)==null){
+    } else {
+      for (String n : value.keySet()) {
+        if (n.isEmpty() || n == null || value.get(n) == null) {
           return true;
         }
       }
     }
     return false;
   }
+
   @Override
   public void dollarAverageInvesting(Map<String, Double> formData,
                                      String portfolioName, Double amount,
                                      String startDate, String endDate,
                                      Double commissionAmount, String recurrence) {
-    if(portfolioName==null || amount ==null ||
-            startDate==null ||
-          commissionAmount==null || recurrence==null || formData==null ||checkMapNull(formData)){
+    if (portfolioName == null || amount == null
+            || startDate == null || commissionAmount == null || recurrence == null
+            || formData == null || checkMapNull(formData)) {
       g1.showInputError("Invalid Input");
-      return;
-    }
-    else {
-      if(endDate.equals("")){
-        endDate=null;
+    } else {
+      if (endDate.equals("")) {
+        endDate = null;
       }
       try {
-        try{
+        try {
           i1.loadPortfolio(portfolioName);
           g1.showInputError("Can't Invest in a Inflexible Portfolio");
           return;
-        }catch (Exception e){
-          try{
+        } catch (Exception e) {
+          try {
             i1.createFlexiblePortfolio(portfolioName);
             g1.showInputError("Created a new Portfolio");
-          }catch (Exception e1){
+          } catch (Exception e1) {
             g1.showInputError("Investing in Existing Portfolio");
           }
         }
 
-        i1.highLevelInvestStrategy(portfolioName,startDate,endDate,
-                Integer.parseInt(recurrence),commissionAmount,amount,formData);
+        i1.highLevelInvestStrategy(portfolioName, startDate, endDate,
+                Integer.parseInt(recurrence), commissionAmount, amount, formData);
         g1.successMessage();
-      }catch (NumberFormatException e){
+      } catch (NumberFormatException e) {
         g1.showInputError("Enter whole number value for recurrence days");
-      }
-      catch (Exception e){
+      } catch (Exception e) {
         g1.showInputError(e.getMessage());
       }
     }
@@ -264,15 +267,13 @@ public class ControllerGUI implements Features{
 
   @Override
   public void changeFile(String name) {
-    if(name==null){
+    if (name == null) {
       g1.showInputError("Error in file change");
-      return;
-    }
-    else {
-      try{
+    } else {
+      try {
         i1.changeReadFile(name);
         g1.successMessage();
-      }catch (Exception e){
+      } catch (Exception e) {
         g1.showInputError(e.getMessage());
       }
     }
@@ -385,8 +386,7 @@ public class ControllerGUI implements Features{
             return;
           }
         }
-      }
-      while (temp);
+      } while (temp);
     }
     g1.showOffLoad();
     g1.plot(trial);
@@ -396,14 +396,13 @@ public class ControllerGUI implements Features{
   @Override
   public void showParticularPortfolio() {
     try {
-      Map<String,Integer> port = i1.loadPortfolio(g1.showParticularPortfolio());
+      Map<String, Integer> port = i1.loadPortfolio(g1.showParticularPortfolio());
       Map<String, Double> hm = new HashMap<>();
-      for(String ss : port.keySet()){
-        hm.put(ss,Double.parseDouble(port.get(ss).toString()));
+      for (String ss : port.keySet()) {
+        hm.put(ss, Double.parseDouble(port.get(ss).toString()));
       }
       g1.showStocks(hm);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       g1.showInputError(e.getMessage());
     }
     g1.resetFocus();
@@ -412,17 +411,16 @@ public class ControllerGUI implements Features{
 
   @Override
   public void totalPortfolioValue(ArrayList<String> portfolio) {
-    try{
+    try {
       String name;
       String date;
       checkNull(portfolio);
-      name= portfolio.get(0);
-      date= portfolio.get(1);
+      name = portfolio.get(0);
+      date = portfolio.get(1);
       g1.showLoad();
-      g1.showValueOfPortfolio(i1.getPortfolioValuation(name,date),name);
+      g1.showValueOfPortfolio(i1.getPortfolioValuation(name, date), name);
       g1.showOffLoad();
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       g1.showOffLoad();
       g1.showInputError(e.getMessage());
     }

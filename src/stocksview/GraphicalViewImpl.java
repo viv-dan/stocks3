@@ -5,23 +5,33 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-
-import java.awt.*;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Color;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JFileChooser;
+import javax.swing.BoxLayout;
+import javax.swing.ListSelectionModel;
+import javax.swing.JOptionPane;
+import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.BorderFactory;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-
 import stockscontroller.Features;
 
-public class GraphicalViewImpl extends JFrame implements GraphicalView{
+public class GraphicalViewImpl extends JFrame implements GraphicalView {
 
 
   private JButton showPortfolio;
@@ -42,7 +52,6 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JButton submitDollar;
   private JButton showValue;
   private JButton changeFile;
-  private JDialog n;
 
   private JButton openBrowser;
   private JButton investStrategy;
@@ -51,15 +60,15 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JLabel portfolioLabel;
   private JTextField amount;
   private JLabel amountLabel;
-  private Map<JTextField,JTextField> weights;
-  private JTextField startDate ;
+  private Map<JTextField, JTextField> weights;
+  private JTextField startDate;
   private JLabel startDateLabel;
-  private JTextField endDate ;
-  private JLabel endDateLabel ;
+  private JTextField endDate;
+  private JLabel endDateLabel;
   private JTextField recurrenceDays;
   private Loading l;
 
-  private JLabel recurrenceDaysLabel ;
+  private JLabel recurrenceDaysLabel;
   private JTextField commissionAmount;
   private JLabel commissionAmountLabel;
 
@@ -67,35 +76,36 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   private JPanel menu;
   private JPanel second;
   private JScrollPane mainScrollPane;
-  public GraphicalViewImpl(){
+
+  public GraphicalViewImpl() {
     super("Welcome");
     goBack = new JButton("Go Back to Main Menu");
     goBack.setActionCommand("GoBack");
-    getInflexiblePortfolio=new JButton("Inflexible Portfolio");
-    getFlexiblePortfolio= new JButton("Flexible Portfolio");
-    buy=new JButton("Buy a stock in a Portfolio");
+    getInflexiblePortfolio = new JButton("Inflexible Portfolio");
+    getFlexiblePortfolio = new JButton("Flexible Portfolio");
+    buy = new JButton("Buy a stock in a Portfolio");
     buy.setActionCommand("buy");
-    sell=new JButton("Sell a stock in a Portfolio");
+    sell = new JButton("Sell a stock in a Portfolio");
     sell.setActionCommand("sell");
-    createFlexible=new JButton("Create Flexible Portfolio");
+    createFlexible = new JButton("Create Flexible Portfolio");
     createFlexible.setActionCommand("createFlexible");
-    investAmount=new JButton("Invest Fixed Amount in Existing Portfolio");
+    investAmount = new JButton("Invest Fixed Amount in Existing Portfolio");
     investAmount.setActionCommand("fixedAmount");
-    highLevelStrategy=new JButton("Invest By Dollar Cost Averaging Strategy "
-            +"in New Portfolio/Existing Portfolio");
+    highLevelStrategy = new JButton("Invest By Dollar Cost Averaging Strategy "
+            + "in New Portfolio/Existing Portfolio");
     highLevelStrategy.setActionCommand("highLevelInvest");
-    submit=new JButton("Submit");
+    submit = new JButton("Submit");
     submit.setActionCommand("submitInvestForm");
-    submitDollar=new JButton("Submit");
+    submitDollar = new JButton("Submit");
     submitDollar.setActionCommand("submitDollarInvestForm");
-    openBrowser=new JButton("Open File");
+    openBrowser = new JButton("Open File");
     openBrowser.setActionCommand("openFileBrowser");
 
     portfolio = new JTextField(5);
     portfolioLabel = new JLabel("Enter portfolio");
     amount = new JTextField(5);
     amountLabel = new JLabel("Enter Total Investment Amount");
-    weights=new HashMap<>();
+    weights = new HashMap<>();
     startDate = new JTextField(5);
     startDateLabel = new JLabel("Enter Start date in YYYY-MM-DD format");
     endDate = new JTextField(5);
@@ -106,21 +116,21 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     recurrenceDaysLabel = new JLabel("Enter the number of days for recurrence of the strategy");
 
 
-    setSize(1000,800);
-    setLocation(300,300);
+    setSize(1000, 800);
+    setLocation(300, 300);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     mainPanel = new JPanel();
-    second=new JPanel();
+    second = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
     mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
     setVisible(true);
     showMenu();
     mainPanel.add(second);
-    l = new Loading(this, true);
+    l = new Loading();
   }
 
-  public void showMenu(){
+  public void showMenu() {
     mainPanel.repaint();
     second.removeAll();
     menu = new JPanel();
@@ -128,25 +138,25 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     menu.setLayout(new BoxLayout(menu, BoxLayout.PAGE_AXIS));
 
 
-    showPortfolio=new JButton("Show All Portfolios");
+    showPortfolio = new JButton("Show All Portfolios");
     showPortfolio.setActionCommand("showPortfolio");
-    showParticularPortfolio=new JButton("Show Particular Portfolios");
+    showParticularPortfolio = new JButton("Show Particular Portfolios");
     showParticularPortfolio.setActionCommand("showParticularPortfolio");
-    createPortfolio=new JButton("Create Flexible Portfolio");
+    createPortfolio = new JButton("Create Flexible Portfolio");
     createPortfolio.setActionCommand("createPortfolio");
     showValue = new JButton("Portfolio Value");
     showValue.setActionCommand("valueOfP");
-    getCostBasis=new JButton("Get cost Basis of a particular Portfolio");
+    getCostBasis = new JButton("Get cost Basis of a particular Portfolio");
     getCostBasis.setActionCommand("costBasis");
-    performTransaction=new JButton("Perform a Buy or Sell Transaction");
+    performTransaction = new JButton("Perform a Buy or Sell Transaction");
     performTransaction.setActionCommand("performBuySell");
-    changeFile=new JButton("Change File");
+    changeFile = new JButton("Change File");
     changeFile.setActionCommand("changeFile");
-    investStrategy=new JButton("Investment Strategy");
+    investStrategy = new JButton("Investment Strategy");
     investStrategy.setActionCommand("strategy");
-    plotGraph=new JButton("Graph");
+    plotGraph = new JButton("Graph");
     plotGraph.setActionCommand("graph");
-    exitButton=new JButton("Exit");
+    exitButton = new JButton("Exit");
     exitButton.setActionCommand("exit");
 
     mainPanel.add(menu);
@@ -165,7 +175,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   }
 
   @Override
-  public void showLoad(){
+  public void showLoad() {
     l.formWindowActivated();
   }
 
@@ -181,7 +191,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     createPortfolio.addActionListener(e -> this.chooseWhichPortfolioOption());
     showValue.addActionListener(e -> feature.totalPortfolioValue(this.showPortfolioDate()));
     getInflexiblePortfolio.addActionListener(e -> feature.showParticularPortfolio());
-    getFlexiblePortfolio.addActionListener(e -> feature.showFlexiblePortfolio(this.showPortfolioDate()));
+    getFlexiblePortfolio.addActionListener(e -> feature.showFlexiblePortfolio(
+            this.showPortfolioDate()));
     getCostBasis.addActionListener(e -> feature.getCostBasis(this.showPortfolioDate()));
     performTransaction.addActionListener(e -> this.chooseBuyOrSell());
     buy.addActionListener(e -> feature.performBuy(this.showBuySellForm()));
@@ -193,14 +204,17 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     plotGraph.addActionListener(e -> feature.plotGraph(this.enterGraphDetails()));
     investAmount.addActionListener(e -> this.investFixedForm());
     submit.addActionListener(e -> feature.investFixedAmount(this.getFormData(),
-            this.portfolioName(),this.startDate(),this.getCommissionAmount(),this.getAmount()));
+            this.portfolioName(), this.startDate(), this.getCommissionAmount(), this.getAmount()));
     highLevelStrategy.addActionListener(e -> this.dollarInvestmentForm());
-    submitDollar.addActionListener(e -> feature.dollarAverageInvesting(this.getFormData(),this.portfolioName(),
-            this.getAmount(),this.startDate(),this.endDate.getText(),
-            this.getCommissionAmount(),this.recurrenceDays.getText()));
-    exitButton.addActionListener(e -> {System.exit(0);});
+    submitDollar.addActionListener(e -> feature.dollarAverageInvesting(this.getFormData(),
+            this.portfolioName(), this.getAmount(), this.startDate(), this.endDate.getText(),
+            this.getCommissionAmount(), this.recurrenceDays.getText()));
+    exitButton.addActionListener(e -> {
+      System.exit(0);
+    });
   }
-  private String openFileChange(){
+
+  private String openFileChange() {
     final JFileChooser fileChooserr = new JFileChooser(".");
     FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "XML and JSON Files", "xml", "json");
@@ -213,27 +227,27 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     return null;
   }
 
-  private void chooseFileChange(){
+  private void chooseFileChange() {
     second.removeAll();
     second.add(new JLabel("To Change Inflexible Portfolios Select .xml file format"));
     second.add(new JLabel("          "));
     second.add(new JLabel("To Change Flexible Portfolios Select .json file format"));
     second.add(new JLabel("          "));
     second.add(openBrowser);
-    second.setLayout(new BoxLayout(second,BoxLayout.Y_AXIS));
+    second.setLayout(new BoxLayout(second, BoxLayout.Y_AXIS));
     mainPanel.repaint();
     validate();
   }
 
-  private Double getCommissionAmount(){
+  private Double getCommissionAmount() {
     try {
       double fee;
-      fee=Double.parseDouble(commissionAmount.getText());
-      if(fee<=0){
+      fee = Double.parseDouble(commissionAmount.getText());
+      if (fee <= 0) {
         throw new RuntimeException();
       }
       return fee;
-    }catch (Exception e){
+    } catch (Exception e) {
       this.showInputError("Invalid Input");
       second.removeAll();
       mainPanel.repaint();
@@ -242,15 +256,15 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     }
   }
 
-  private Double getAmount(){
+  private Double getAmount() {
     try {
       double fee;
-      fee=Double.parseDouble(amount.getText());
-      if(fee<=0){
+      fee = Double.parseDouble(amount.getText());
+      if (fee <= 0) {
         throw new RuntimeException();
       }
       return fee;
-    }catch (Exception e){
+    } catch (Exception e) {
       this.showInputError("Invalid Input");
       second.removeAll();
       mainPanel.repaint();
@@ -273,7 +287,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     l.setLayoutOrientation(JList.HORIZONTAL_WRAP);
     l.setVisibleRowCount(-1);
     JScrollPane listScroll = new JScrollPane(l);
-    listScroll.setPreferredSize(new Dimension(250,80));
+    listScroll.setPreferredSize(new Dimension(250, 80));
     other.add(l);
     second.add(other);
     validate();
@@ -284,6 +298,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     String name = JOptionPane.showInputDialog("Enter name of portfolio");
     return name;
   }
+
   @Override
   public ArrayList<String> showPortfolioDate() {
     JPanel controls = new JPanel(new FlowLayout());
@@ -304,18 +319,18 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   public void showStocks(Map<String, Double> portfolio) {
     second.removeAll();
     mainPanel.repaint();
-    String[] columns = {"Stock","Quantity"};
-    String [][] data=new String[portfolio.size()][2];
+    String[] columns = {"Stock", "Quantity"};
+    String[][] data = new String[portfolio.size()][2];
     int i;
     DecimalFormat df = new DecimalFormat();
-    i=0;
-    for (String s:portfolio.keySet()) {
-      data[i][0]=s;
-      data[i][1]= df.format(portfolio.get(s));
+    i = 0;
+    for (String s : portfolio.keySet()) {
+      data[i][0] = s;
+      data[i][1] = df.format(portfolio.get(s));
       i++;
     }
-    JTable j=new JTable(data,columns);
-    JScrollPane sc= new JScrollPane(j);
+    JTable j = new JTable(data, columns);
+    JScrollPane sc = new JScrollPane(j);
     second.add(sc);
     validate();
   }
@@ -327,9 +342,10 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   }
 
   @Override
-  public void showValueOfPortfolio(double value,String name) {
+  public void showValueOfPortfolio(double value, String name) {
     DecimalFormat df = new DecimalFormat();
-    JLabel display=new JLabel("The value of the portfolio "+name+" is USD "+df.format(value));
+    JLabel display = new JLabel("The value of the portfolio " + name + " is USD "
+            + df.format(value));
     second.removeAll();
     second.add(display);
     mainPanel.repaint();
@@ -339,7 +355,8 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   @Override
   public void showCostOfPortfolio(double value, String date) {
     DecimalFormat df = new DecimalFormat();
-    JLabel display=new JLabel("The cost of the portfolio on "+date+" is USD "+df.format(value));
+    JLabel display = new JLabel("The cost of the portfolio on " + date + " is USD "
+            + df.format(value));
     second.removeAll();
     second.add(display);
     mainPanel.repaint();
@@ -348,7 +365,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
 
   @Override
   public void showInputError(String message) {
-    JOptionPane.showMessageDialog(this,message);
+    JOptionPane.showMessageDialog(this, message);
   }
 
   @Override
@@ -395,10 +412,9 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     values.add(date.getText());
     values.add(ticker.getText());
     values.add(quantity.getText());
-    if(commissionAmount.getText()==null || commissionAmount.getText().isEmpty()){
+    if (commissionAmount.getText() == null || commissionAmount.getText().isEmpty()) {
       values.add("0");
-    }
-    else {
+    } else {
       values.add(commissionAmount.getText());
     }
     return values;
@@ -414,7 +430,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
 
   @Override
   public void successMessage() {
-    JOptionPane.showMessageDialog(this,"Done Successfully");
+    JOptionPane.showMessageDialog(this, "Done Successfully");
   }
 
   @Override
@@ -428,7 +444,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(endDate, BorderLayout.CENTER);
     JOptionPane.showMessageDialog(this, controls, "Graph",
             JOptionPane.QUESTION_MESSAGE);
-    ArrayList<String>values=new ArrayList<>();
+    ArrayList<String> values = new ArrayList<>();
     values.add(portfolio.getText());
     values.add(startDate.getText());
     values.add(endDate.getText());
@@ -438,13 +454,13 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   @Override
   public void plot(Map<String, Double> trial) {
     DefaultCategoryDataset data = new DefaultCategoryDataset();
-    for (String s: trial.keySet()) {
-      data.addValue(trial.get(s),"Values",s);
+    for (String s : trial.keySet()) {
+      data.addValue(trial.get(s), "Values", s);
     }
-    JFreeChart line = ChartFactory.createBarChart("Portfolio","Dates",
-            "Values", data,PlotOrientation.HORIZONTAL, true,true,false);
+    JFreeChart line = ChartFactory.createBarChart("Portfolio", "Dates",
+            "Values", data, PlotOrientation.HORIZONTAL, true, true, false);
     line.setBorderPaint(Color.BLUE);
-    ChartPanel chartPanel = new ChartPanel( line );
+    ChartPanel chartPanel = new ChartPanel(line);
     second.removeAll();
     second.add(chartPanel);
     mainPanel.repaint();
@@ -460,16 +476,16 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     second.add(highLevelStrategy);
     validate();
   }
-  private void setUpForm(JPanel controls){
+
+  private void setUpForm(JPanel controls) {
     String name = JOptionPane.showInputDialog("Enter number of stocks you want to invest in.");
     int value;
-    try{
-      value=Integer.parseInt(name);
-      if(value<=0){
+    try {
+      value = Integer.parseInt(name);
+      if (value <= 0) {
         throw new RuntimeException();
       }
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       this.showInputError("Invalid Input");
       second.removeAll();
       mainPanel.repaint();
@@ -484,11 +500,11 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(startDate);
     controls.add(commissionAmountLabel);
     controls.add(commissionAmount);
-    weights=new HashMap<>();
-    for(int i=0;i<value;i++){
-      weights.put(new JTextField(5),new JTextField(5));
+    weights = new HashMap<>();
+    for (int i = 0; i < value; i++) {
+      weights.put(new JTextField(5), new JTextField(5));
     }
-    for (JTextField text:weights.keySet() ) {
+    for (JTextField text : weights.keySet()) {
       controls.add(new JLabel("Enter Stock Ticker"));
       controls.add(weights.get(text));
       controls.add(new JLabel("Enter Weightage as Percentage"));
@@ -501,14 +517,14 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     JPanel controls = new JPanel();
     setUpForm(controls);
     controls.add(submit);
-    controls.setLayout(new BoxLayout(controls,BoxLayout.Y_AXIS));
+    controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     second.removeAll();
     second.add(controls);
     mainPanel.repaint();
     validate();
   }
 
-  private void dollarInvestmentForm(){
+  private void dollarInvestmentForm() {
     JPanel controls = new JPanel();
     setUpForm(controls);
     controls.add(endDateLabel);
@@ -516,7 +532,7 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     controls.add(recurrenceDaysLabel);
     controls.add(recurrenceDays);
     controls.add(submitDollar);
-    controls.setLayout(new BoxLayout(controls,BoxLayout.Y_AXIS));
+    controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
     second.removeAll();
     second.add(controls);
     mainPanel.repaint();
@@ -524,21 +540,20 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
   }
 
 
-
-  private Map<String,Double> getFormData(){
-    Map<String,Double> value=new HashMap<>();
-    try{
+  private Map<String, Double> getFormData() {
+    Map<String, Double> value = new HashMap<>();
+    try {
       double temp;
-      for (JTextField text: weights.keySet()) {
+      for (JTextField text : weights.keySet()) {
         temp = Double.parseDouble(text.getText());
-        if(temp<=0 || temp>=100){
+        if (temp <= 0 || temp >= 100) {
           throw new RuntimeException();
-        }else {
-          value.put(weights.get(text).getText(),temp );
+        } else {
+          value.put(weights.get(text).getText(), temp);
         }
 
       }
-    }catch (Exception e){
+    } catch (Exception e) {
       this.showInputError("Invalid Input");
       second.removeAll();
       mainPanel.repaint();
@@ -547,13 +562,14 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView{
     }
     return value;
   }
-  private String portfolioName(){
+
+  private String portfolioName() {
     return portfolio.getText();
   }
-  private String startDate(){
+
+  private String startDate() {
     return startDate.getText();
   }
-
 
 
 }

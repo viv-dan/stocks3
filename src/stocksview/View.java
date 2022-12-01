@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 public interface View {
+
   /**
    * The method displays the options that user can choose from, like create portfolio, load
    * portfolio, show all the portfolios, load portfolio from a file with respective integers
    * to choose from.
    */
   void showMenu();
+
   /**
    * The method displays the stock tickers and their quantities that are passed in as a map of keys
    * as stock tickers and values as quantity of the particular stock.
@@ -17,6 +19,7 @@ public interface View {
    * @param stocks the map where it the stock tickers and its quantities
    */
   void showStocks(Map<String, Double> stocks);
+
   /**
    * The method displays all portfolio names of the user.
    *
@@ -32,6 +35,7 @@ public interface View {
    * @param date  the date on which the portfolio value is generated
    */
   void showValueOfPortfolio(double value, String date);
+
   /**
    * The method displays the double value saying that the is the cost on the particular date
    * that is passed to it.
@@ -40,6 +44,7 @@ public interface View {
    * @param date  the date on which the value is generated
    */
   void showCostOfPortfolio(double value, String date);
+
   /**
    * The method displays a success message to indicate a successful operation.
    */
