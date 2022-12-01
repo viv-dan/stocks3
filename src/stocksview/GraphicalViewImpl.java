@@ -31,6 +31,10 @@ import javax.swing.BorderFactory;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import stockscontroller.Features;
 
+/**
+ * The class implements the graphical view interface.
+ * The class extends JFrame for a graphical user interface.
+ */
 public class GraphicalViewImpl extends JFrame implements GraphicalView {
 
 
@@ -77,6 +81,9 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
   private JPanel second;
   private JScrollPane mainScrollPane;
 
+  /**
+   * The constructor for the graphical view impl class.
+   */
   public GraphicalViewImpl() {
     super("Welcome");
     goBack = new JButton("Go Back to Main Menu");
@@ -130,6 +137,9 @@ public class GraphicalViewImpl extends JFrame implements GraphicalView {
     l = new Loading();
   }
 
+  /**
+   * The show menu sets the menu for the user.
+   */
   public void showMenu() {
     mainPanel.repaint();
     second.removeAll();
